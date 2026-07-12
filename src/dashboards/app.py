@@ -1,0 +1,380 @@
+from src.components.kpi_cards import show_kpi_cards
+from src.components.charts import (
+    show_revenue_category_chart,
+    show_region_chart
+)
+from src.components.recommendations import show_recommendations
+
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+
+from src.analytics.sales_queries import (
+    total_revenue,
+    total_products_sold,
+    total_customers,
+    total_orders,
+    revenue_by_category,
+    revenue_by_region,
+    available_regions,
+    top_products,
+    top_customers,
+    inventory_status,
+    monthly_revenue,
+    category_sales
+)
+
+st.set_page_config(
+    page_title="Decision Intelligence Platform",
+    page_icon="📊",
+    layout="wide"
+)
+
+st.sidebar.title("📊 Decision Intelligence Platform")
+
+page = st.sidebar.radio(
+    "Navigation",
+    [
+        "Dashboard",
+        "Analytics",
+        "Recommendations"
+    ]
+)
+
+# ===========================
+# DASHBOARD
+# ===========================
+
+if page == "Dashboard":
+
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("Filters")
+
+    region_options = ["All"] + [
+        row[0] for row in available_regions()
+    ]
+
+    selected_region = st.sidebar.selectbox(
+        "Region",
+        region_options
+    )
+
+    st.title("📊 Decision Intelligence Platform")
+
+    st.markdown("""
+### Executive Sales Intelligence Dashboard
+
+Real-time business intelligence platform built using
+**Python • PostgreSQL • Streamlit • Plotly**
+
+Monitor revenue, customers, products, inventory and business performance through interactive analytics.
+""")
+
+    st.markdown("---")
+
+    show_kpi_cards(
+        total_revenue(),
+        total_products_sold(),
+        total_customers(),
+        total_orders()
+    )
+
+    st.markdown("---")
+
+    st.subheader("📌 Executive Summary")
+
+    left, right = st.columns(2)
+
+    with left:
+        st.info("""
+### Business Performance
+
+• Revenue generated from transactional sales
+
+• Real-time inventory monitoring
+
+• Customer purchase behaviour analysis
+
+• Region-wise business performance
+""")
+
+    with right:
+        st.success("""
+### Strategic Recommendations
+
+• Increase stock of high-performing products
+
+• Improve low-performing categories
+
+• Expand profitable regions
+
+• Monitor inventory before stock-outs
+""")
+
+    st.markdown("---")
+
+    left, right = st.columns(2)
+
+    with left:
+        show_revenue_category_chart(
+            revenue_by_category(selected_region)
+        )
+
+    with right:
+        show_region_chart(
+            revenue_by_region(selected_region)
+        )
+
+    st.markdown("---")
+
+    st.header("📊 Advanced Analytics")
+
+    left, right = st.columns(2)
+
+    products_df = pd.DataFrame(
+        top_products(),
+        columns=["Product", "Units Sold"]
+    )
+
+    fig_products = px.bar(
+        products_df,
+        x="Units Sold",
+        y="Product",
+        orientation="h",
+        title="Top Selling Products"
+    )
+
+    with left:
+        st.plotly_chart(
+            fig_products,
+            use_container_width=True
+        )
+
+    customers_df = pd.DataFrame(
+        top_customers(),
+        columns=["Customer", "Revenue"]
+    )
+
+    fig_customers = px.bar(
+        customers_df,
+        x="Revenue",
+        y="Customer",
+        orientation="h",
+        title="Top Customers"
+    )
+
+    with right:
+        st.plotly_chart(
+            fig_customers,
+            use_container_width=True
+        )
+
+    st.markdown("---")
+
+    st.header("📦 Inventory Status")
+
+    inventory_df = pd.DataFrame(
+        inventory_status(),
+        columns=["Product", "Stock"]
+    )
+
+    st.dataframe(
+        inventory_df,
+        use_container_width=True
+    )
+
+    st.markdown("---")
+
+    left, right = st.columns(2)
+
+    monthly_df = pd.DataFrame(
+        monthly_revenue(),
+        columns=["Month", "Revenue"]
+    )
+
+    fig_month = px.line(
+        monthly_df,
+        x="Month",
+        y="Revenue",
+        markers=True,
+        title="Monthly Revenue"
+    )
+
+    with left:
+        st.plotly_chart(
+            fig_month,
+            use_container_width=True
+        )
+
+    category_sales_df = pd.DataFrame(
+        category_sales(),
+        columns=["Category", "Units Sold"]
+    )
+
+    fig_sales = px.pie(
+        category_sales_df,
+        names="Category",
+        values="Units Sold",
+        title="Sales Distribution"
+    )
+
+    with right:
+        st.plotly_chart(
+            fig_sales,
+            use_container_width=True
+        )
+
+    st.markdown("---")
+
+    show_recommendations(
+        inventory_status()
+    )
+# ===========================
+# ANALYTICS
+# ===========================
+
+elif page == "Analytics":
+
+    st.title("📈 Analytics")
+
+    st.markdown("---")
+
+    products_df = pd.DataFrame(
+        top_products(),
+        columns=["Product", "Units Sold"]
+    )
+
+    st.subheader("🏆 Top Selling Products")
+
+    st.dataframe(
+        products_df,
+        use_container_width=True
+    )
+
+    st.markdown("---")
+
+    customers_df = pd.DataFrame(
+        top_customers(),
+        columns=["Customer", "Revenue"]
+    )
+
+    st.subheader("👑 Top Customers")
+
+    st.dataframe(
+        customers_df,
+        use_container_width=True
+    )
+
+    st.markdown("---")
+
+    inventory_df = pd.DataFrame(
+        inventory_status(),
+        columns=["Product", "Stock"]
+    )
+
+    st.subheader("📦 Inventory Status")
+
+    st.dataframe(
+        inventory_df,
+        use_container_width=True
+    )
+
+    st.markdown("---")
+
+    monthly_df = pd.DataFrame(
+        monthly_revenue(),
+        columns=["Month", "Revenue"]
+    )
+
+    fig_month = px.line(
+        monthly_df,
+        x="Month",
+        y="Revenue",
+        markers=True,
+        title="Monthly Revenue"
+    )
+
+    st.subheader("📅 Monthly Revenue")
+
+    st.plotly_chart(
+        fig_month,
+        use_container_width=True
+    )
+
+    st.markdown("---")
+
+    category_sales_df = pd.DataFrame(
+        category_sales(),
+        columns=["Category", "Units Sold"]
+    )
+
+    fig_sales = px.pie(
+        category_sales_df,
+        names="Category",
+        values="Units Sold",
+        title="Sales Distribution"
+    )
+
+    st.subheader("🥧 Sales Distribution")
+
+    st.plotly_chart(
+        fig_sales,
+        use_container_width=True
+    )
+
+
+# ===========================
+# RECOMMENDATIONS
+# ===========================
+
+elif page == "Recommendations":
+
+    st.title("🤖 Business Recommendations")
+
+    st.markdown("---")
+
+    inventory = inventory_status()
+
+    show_recommendations(
+        inventory
+    )
+
+    st.markdown("---")
+
+    if total_revenue() > 5000000:
+        st.success("✅ Revenue is performing very well.")
+    else:
+        st.warning("⚠ Revenue can be improved.")
+
+    if total_orders() < 30:
+        st.warning(
+            "⚠ Order volume is relatively low. Consider promotional campaigns."
+        )
+    else:
+        st.success("✅ Order volume is healthy.")
+
+    low_stock = [
+        item[0]
+        for item in inventory
+        if item[1] < 50
+    ]
+
+    if low_stock:
+        st.error("Low Stock Products:")
+
+        for product in low_stock:
+            st.write(f"• {product}")
+
+    else:
+        st.success("✅ No products are running low on stock.")
+
+
+st.markdown("---")
+
+st.caption("""
+Decision Intelligence Platform
+
+Developed using Python, PostgreSQL, Streamlit and Plotly
+
+© 2026 Raunaq Ghosh
+""")
