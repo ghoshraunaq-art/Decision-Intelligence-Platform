@@ -1,15 +1,15 @@
-from src.components.kpi_cards import show_kpi_cards
-from src.components.charts import (
+from components.kpi_cards import show_kpi_cards
+from components.charts import (
     show_revenue_category_chart,
     show_region_chart
 )
-from src.components.recommendations import show_recommendations
+from components.recommendations import show_recommendations
 
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-from src.analytics.sales_queries import (
+from analytics.sales_queries import (
     total_revenue,
     total_products_sold,
     total_customers,
@@ -23,7 +23,6 @@ from src.analytics.sales_queries import (
     monthly_revenue,
     category_sales
 )
-
 st.set_page_config(
     page_title="Decision Intelligence Platform",
     page_icon="📊",

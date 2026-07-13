@@ -1,4 +1,4 @@
-from src.database.db_connection import get_connection
+from database.db_connection import get_connection
 
 
 def execute_query(query, params=None):
