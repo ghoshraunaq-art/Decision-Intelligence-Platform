@@ -1,3 +1,8 @@
+import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from components.kpi_cards import show_kpi_cards
 from components.charts import (
     show_revenue_category_chart,
