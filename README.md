@@ -21,6 +21,12 @@ The project analyzes retail sales data and provides real-time business insights 
 
 ---
 
+## 🌐 Live Demo
+
+https://decision-intelligence-platform-cw5a5vt8dvjnyyzukqmeor.streamlit.app/
+
+---
+
 ## 🛠 Tech Stack
 
 * Python
@@ -123,13 +129,14 @@ python -m streamlit run src/dashboards/app.py
 
 ## 📌 Future Improvements
 
-* Machine Learning Sales Forecasting
-* Customer Segmentation
-* Profit Analysis
-* Download Reports
-* Cloud Database Integration
-* Online Deployment
-
+- Machine Learning Sales Forecasting
+- Customer Segmentation using RFM Analysis
+- Profit and Margin Analysis
+- Export Dashboard Reports (PDF/Excel)
+- User Authentication & Login System
+- Role-Based Dashboard Access
+- Real-Time Sales Data Integration
+- AI-powered Business Insights
 ---
 
 ## 👨‍💻 Author
