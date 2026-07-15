@@ -6,6 +6,14 @@ The project analyzes retail sales data and provides real-time business insights 
 
 ---
 
+## 🎯 Project Objective
+
+The Decision Intelligence Platform is designed to help businesses analyze retail sales data and make informed decisions through interactive dashboards, KPIs, visual analytics, inventory monitoring, and automated business recommendations.
+
+The platform integrates PostgreSQL, Supabase, Streamlit, and Plotly to provide a cloud-based analytics solution capable of delivering actionable business insights in real time.
+
+---
+
 ## 🚀 Features
 
 * Executive KPI Dashboard
@@ -124,14 +132,6 @@ The repository contains screenshots demonstrating:
 - PostgreSQL Database (pgAdmin)
 - Supabase Database Configuration
 - Streamlit Cloud Deployment
-
----
-
-## 🎯 Project Objective
-
-The Decision Intelligence Platform is designed to help businesses analyze retail sales data and make informed decisions through interactive dashboards, KPIs, visual analytics, inventory monitoring, and automated business recommendations.
-
-The platform integrates PostgreSQL, Supabase, Streamlit, and Plotly to provide a cloud-based analytics solution capable of delivering actionable business insights in real time.
 
 ---
 
