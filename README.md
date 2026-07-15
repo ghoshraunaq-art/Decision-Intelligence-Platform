@@ -39,6 +39,15 @@ https://decision-intelligence-platform-cw5a5vt8dvjnyyzukqmeor.streamlit.app/
 
 ---
 
+## ☁️ Deployment
+
+- **Frontend:** Streamlit Cloud
+- **Database:** PostgreSQL (Supabase)
+- **Visualization:** Plotly
+- **Programming Language:** Python
+
+---
+
 ## 🗄 Database Design
 
 The project uses a normalized PostgreSQL database.
@@ -105,6 +114,27 @@ Decision_Intelligence_Platform/
 
 ---
 
+## 📷 Project Screenshots
+
+The repository contains screenshots demonstrating:
+
+- Executive Dashboard
+- Analytics Dashboard
+- Recommendations Dashboard
+- PostgreSQL Database (pgAdmin)
+- Supabase Database Configuration
+- Streamlit Cloud Deployment
+
+---
+
+## 🎯 Project Objective
+
+The Decision Intelligence Platform is designed to help businesses analyze retail sales data and make informed decisions through interactive dashboards, KPIs, visual analytics, inventory monitoring, and automated business recommendations.
+
+The platform integrates PostgreSQL, Supabase, Streamlit, and Plotly to provide a cloud-based analytics solution capable of delivering actionable business insights in real time.
+
+---
+
 ## ▶️ Installation
 
 Clone the repository
@@ -143,6 +173,9 @@ python -m streamlit run src/dashboards/app.py
 
 **Raunaq Ghosh**
 
-B.Tech Computer Science Engineering
+B.Tech Computer Science & Engineering  
+Kalinga Institute of Industrial Technology (KIIT)  
+Bhubaneswar, Odisha, India
 
-KIIT University
+GitHub:
+https://github.com/ghoshraunaq-art
