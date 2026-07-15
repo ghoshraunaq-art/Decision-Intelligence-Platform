@@ -1,3 +1,8 @@
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-Deployed-red)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 # 📊 Decision Intelligence Platform
 
 An interactive Business Intelligence Dashboard built using **Python, PostgreSQL, Streamlit and Plotly**.
