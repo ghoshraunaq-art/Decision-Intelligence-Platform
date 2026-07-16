@@ -58,7 +58,7 @@ if page == "Dashboard":
     st.sidebar.markdown("---")
     st.sidebar.subheader("Filters")
 
-# Region
+    # Region
     region_options = ["All"] + [
         row[0] for row in available_regions()
     ]
@@ -68,9 +68,9 @@ if page == "Dashboard":
         region_options
     )
 
-# Country
+    # Country
     country_options = ["All"] + [
-        row[0] for row in available_countries()
+        row[0] for row in available_countries(selected_region)
     ]
 
     selected_country = st.sidebar.selectbox(
@@ -78,9 +78,12 @@ if page == "Dashboard":
         country_options
     )
 
-# Category
+    # Category
     category_options = ["All"] + [
-        row[0] for row in available_categories()
+        row[0] for row in available_categories(
+            selected_region,
+            selected_country
+        )
     ]
 
     selected_category = st.sidebar.selectbox(
@@ -88,9 +91,13 @@ if page == "Dashboard":
         category_options
     )
 
-# Product
+    # Product
     product_options = ["All"] + [
-        row[0] for row in available_products()
+        row[0] for row in available_products(
+            selected_region,
+            selected_country,
+            selected_category
+        )
     ]
 
     selected_product = st.sidebar.selectbox(
@@ -98,7 +105,7 @@ if page == "Dashboard":
         product_options
     )
 
-# Year
+    # Year
     year_options = ["All"] + [
         int(row[0]) for row in available_years()
     ]

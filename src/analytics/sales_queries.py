@@ -350,35 +350,100 @@ def available_regions():
 
     """)
 
-def available_countries():
+def available_countries(region="All"):
+
+    if region == "All":
+        return execute_query("""
+            SELECT DISTINCT
+                c.country_name
+            FROM countries c
+            ORDER BY c.country_name
+        """)
 
     return execute_query("""
-
         SELECT DISTINCT
             c.country_name
         FROM countries c
+        JOIN regions r
+            ON c.region_id = r.region_id
+        WHERE r.region_name = %s
         ORDER BY c.country_name
+    """, (region,))
 
-    """)
+def available_categories(region="All", country="All"):
 
-def available_categories():
-
-    return execute_query("""
+    query = """
         SELECT DISTINCT
-            category_name
-        FROM categories
-        ORDER BY category_name
-    """)
+            cat.category_name
+        FROM order_items oi
+        JOIN products p
+            ON oi.product_id = p.product_id
+        JOIN categories cat
+            ON p.category_id = cat.category_id
+        JOIN orders o
+            ON oi.order_id = o.order_id
+        JOIN customers cu
+            ON o.customer_id = cu.customer_id
+        JOIN countries c
+            ON cu.country_id = c.country_id
+        JOIN regions r
+            ON c.region_id = r.region_id
+        WHERE 1=1
+    """
+
+    params = []
+
+    if region != "All":
+        query += " AND r.region_name = %s"
+        params.append(region)
+
+    if country != "All":
+        query += " AND c.country_name = %s"
+        params.append(country)
+
+    query += " ORDER BY cat.category_name"
+
+    return execute_query(query, tuple(params))
 
 
-def available_products():
+def available_products(region="All", country="All", category="All"):
 
-    return execute_query("""
+    query = """
         SELECT DISTINCT
-            product_name
-        FROM products
-        ORDER BY product_name
-    """)
+            p.product_name
+        FROM order_items oi
+        JOIN products p
+            ON oi.product_id = p.product_id
+        JOIN categories cat
+            ON p.category_id = cat.category_id
+        JOIN orders o
+            ON oi.order_id = o.order_id
+        JOIN customers cu
+            ON o.customer_id = cu.customer_id
+        JOIN countries c
+            ON cu.country_id = c.country_id
+        JOIN regions r
+            ON c.region_id = r.region_id
+        WHERE 1=1
+    """
+
+    params = []
+
+    if region != "All":
+        query += " AND r.region_name = %s"
+        params.append(region)
+
+    if country != "All":
+        query += " AND c.country_name = %s"
+        params.append(country)
+
+    if category != "All":
+        query += " AND cat.category_name = %s"
+        params.append(category)
+
+    query += " ORDER BY p.product_name"
+
+    return execute_query(query, tuple(params))
 
 
 def available_years():
