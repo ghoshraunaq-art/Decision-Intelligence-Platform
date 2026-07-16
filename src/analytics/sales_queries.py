@@ -456,10 +456,10 @@ def available_years(region="All",
         FROM orders o
         JOIN customers cu
             ON o.customer_id = cu.customer_id
-        JOIN countries c
-            ON cu.country_id = c.country_id
         JOIN regions r
-            ON c.region_id = r.region_id
+            ON cu.region_id = r.region_id
+        JOIN countries c
+            ON r.country_id = c.country_id
         JOIN order_items oi
             ON o.order_id = oi.order_id
         JOIN products p
