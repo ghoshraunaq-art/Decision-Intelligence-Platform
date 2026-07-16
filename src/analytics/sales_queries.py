@@ -19,36 +19,67 @@ def execute_query(query, params=None):
     return result
 
 
-def total_revenue(region="All"):
+def total_revenue(region="All",
+                  country="All",
+                  category="All",
+                  product="All",
+                  year="All"):
 
     query = """
 
         SELECT
-            COALESCE(SUM(s.quantity_sold*s.selling_price),0)
+            COALESCE(SUM(s.quantity_sold * s.selling_price), 0)
 
         FROM sales s
 
         JOIN order_items oi
-            ON s.order_item_id=oi.order_item_id
+            ON s.order_item_id = oi.order_item_id
 
         JOIN orders o
-            ON oi.order_id=o.order_id
+            ON oi.order_id = o.order_id
 
-        JOIN customers c
-            ON o.customer_id=c.customer_id
+        JOIN customers cu
+            ON o.customer_id = cu.customer_id
 
         JOIN regions r
-            ON c.region_id=r.region_id
+            ON cu.region_id = r.region_id
+
+        JOIN countries c
+            ON r.country_id = c.country_id
+
+        JOIN products p
+            ON oi.product_id = p.product_id
+
+        JOIN categories cat
+            ON p.category_id = cat.category_id
+
+        WHERE 1=1
 
     """
 
-    params=None
+    params = []
 
-    if region!="All":
-        query+="WHERE r.region_name=%s"
-        params=(region,)
+    if region != "All":
+        query += " AND r.region_name = %s"
+        params.append(region)
 
-    return execute_query(query,params)[0][0]
+    if country != "All":
+        query += " AND c.country_name = %s"
+        params.append(country)
+
+    if category != "All":
+        query += " AND cat.category_name = %s"
+        params.append(category)
+
+    if product != "All":
+        query += " AND p.product_name = %s"
+        params.append(product)
+
+    if year != "All":
+        query += " AND EXTRACT(YEAR FROM o.order_date) = %s"
+        params.append(year)
+
+    return execute_query(query, tuple(params))[0][0]
 
 def total_products_sold(region="All"):
 
@@ -354,17 +385,17 @@ def available_countries(region="All"):
     if region == "All":
         return execute_query("""
             SELECT DISTINCT
-                c.country_name
-            FROM countries c
-            ORDER BY c.country_name
+                country_name
+            FROM countries
+            ORDER BY country_name
         """)
 
     return execute_query("""
         SELECT DISTINCT
             c.country_name
-        FROM countries c
-        JOIN regions r
-            ON c.region_id = r.region_id
+        FROM regions r
+        JOIN countries c
+            ON r.country_id = c.country_id
         WHERE r.region_name = %s
         ORDER BY c.country_name
     """, (region,))
