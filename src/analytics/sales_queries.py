@@ -349,3 +349,43 @@ def available_regions():
         ORDER BY r.region_name;
 
     """)
+
+def available_countries():
+
+    return execute_query("""
+
+        SELECT DISTINCT
+            c.country_name
+        FROM countries c
+        ORDER BY c.country_name
+
+    """)
+
+def available_categories():
+
+    return execute_query("""
+        SELECT DISTINCT
+            category_name
+        FROM categories
+        ORDER BY category_name
+    """)
+
+
+def available_products():
+
+    return execute_query("""
+        SELECT DISTINCT
+            product_name
+        FROM products
+        ORDER BY product_name
+    """)
+
+
+def available_years():
+
+    return execute_query("""
+        SELECT DISTINCT
+            EXTRACT(YEAR FROM order_date)
+        FROM orders
+        ORDER BY 1
+    """)

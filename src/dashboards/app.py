@@ -22,6 +22,10 @@ from analytics.sales_queries import (
     revenue_by_category,
     revenue_by_region,
     available_regions,
+    available_countries,
+    available_categories,
+    available_products,
+    available_years,
     top_products,
     top_customers,
     inventory_status,
@@ -54,6 +58,7 @@ if page == "Dashboard":
     st.sidebar.markdown("---")
     st.sidebar.subheader("Filters")
 
+# Region
     region_options = ["All"] + [
         row[0] for row in available_regions()
     ]
@@ -63,6 +68,46 @@ if page == "Dashboard":
         region_options
     )
 
+# Country
+    country_options = ["All"] + [
+        row[0] for row in available_countries()
+    ]
+
+    selected_country = st.sidebar.selectbox(
+        "Country",
+        country_options
+    )
+
+# Category
+    category_options = ["All"] + [
+        row[0] for row in available_categories()
+    ]
+
+    selected_category = st.sidebar.selectbox(
+        "Category",
+        category_options
+    )
+
+# Product
+    product_options = ["All"] + [
+        row[0] for row in available_products()
+    ]
+
+    selected_product = st.sidebar.selectbox(
+        "Product",
+        product_options
+    )
+
+# Year
+    year_options = ["All"] + [
+        int(row[0]) for row in available_years()
+    ]
+
+    selected_year = st.sidebar.selectbox(
+        "Year",
+        year_options
+    )
+    
     st.title("📊 Decision Intelligence Platform")
 
     st.markdown("""
