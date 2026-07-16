@@ -58,24 +58,25 @@ if page == "Dashboard":
     st.sidebar.markdown("---")
     st.sidebar.subheader("Filters")
 
-    # Region
-    region_options = ["All"] + [
-        row[0] for row in available_regions()
-    ]
-
-    selected_region = st.sidebar.selectbox(
-        "Region",
-        region_options
-    )
-
     # Country
     country_options = ["All"] + [
-        row[0] for row in available_countries(selected_region)
+    row[0] for row in available_countries()
     ]
 
     selected_country = st.sidebar.selectbox(
         "Country",
         country_options
+    )
+
+    # Region
+    region_options = ["All"] + [
+    row[0]
+    for row in available_regions(selected_country)
+    ]
+
+    selected_region = st.sidebar.selectbox(
+        "Region",
+        region_options
     )
 
     # Category
@@ -107,7 +108,12 @@ if page == "Dashboard":
 
     # Year
     year_options = ["All"] + [
-        int(row[0]) for row in available_years()
+    int(row[0]) for row in available_years(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product
+    )
     ]
 
     selected_year = st.sidebar.selectbox(
@@ -129,11 +135,35 @@ Monitor revenue, customers, products, inventory and business performance through
     st.markdown("---")
 
     show_kpi_cards(
-        total_revenue(),
-        total_products_sold(),
-        total_customers(),
-        total_orders()
+    total_revenue(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    ),
+    total_products_sold(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    ),
+    total_customers(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    ),
+    total_orders(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
     )
+)
 
     st.markdown("---")
 
@@ -173,13 +203,25 @@ Monitor revenue, customers, products, inventory and business performance through
 
     with left:
         show_revenue_category_chart(
-            revenue_by_category(selected_region)
-        )
+    revenue_by_category(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    )
+)
 
     with right:
         show_region_chart(
-            revenue_by_region(selected_region)
-        )
+    revenue_by_region(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    )
+)
 
     st.markdown("---")
 
@@ -188,7 +230,13 @@ Monitor revenue, customers, products, inventory and business performance through
     left, right = st.columns(2)
 
     products_df = pd.DataFrame(
-        top_products(),
+       top_products(
+    selected_region,
+    selected_country,
+    selected_category,
+    selected_product,
+    selected_year
+),
         columns=["Product", "Units Sold"]
     )
 
@@ -207,7 +255,13 @@ Monitor revenue, customers, products, inventory and business performance through
         )
 
     customers_df = pd.DataFrame(
-        top_customers(),
+       top_customers(
+    selected_region,
+    selected_country,
+    selected_category,
+    selected_product,
+    selected_year
+),
         columns=["Customer", "Revenue"]
     )
 
@@ -230,7 +284,13 @@ Monitor revenue, customers, products, inventory and business performance through
     st.header("📦 Inventory Status")
 
     inventory_df = pd.DataFrame(
-        inventory_status(),
+        inventory_status(
+    selected_region,
+    selected_country,
+    selected_category,
+    selected_product,
+    selected_year
+),
         columns=["Product", "Stock"]
     )
 
@@ -244,7 +304,13 @@ Monitor revenue, customers, products, inventory and business performance through
     left, right = st.columns(2)
 
     monthly_df = pd.DataFrame(
-        monthly_revenue(),
+        monthly_revenue(
+    selected_region,
+    selected_country,
+    selected_category,
+    selected_product,
+    selected_year
+),
         columns=["Month", "Revenue"]
     )
 
@@ -263,7 +329,13 @@ Monitor revenue, customers, products, inventory and business performance through
         )
 
     category_sales_df = pd.DataFrame(
-        category_sales(),
+        category_sales(
+    selected_region,
+    selected_country,
+    selected_category,
+    selected_product,
+    selected_year
+),
         columns=["Category", "Units Sold"]
     )
 
@@ -283,7 +355,13 @@ Monitor revenue, customers, products, inventory and business performance through
     st.markdown("---")
 
     show_recommendations(
-        inventory_status()
+        inventory_status(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        )
     )
 # ===========================
 # ANALYTICS
