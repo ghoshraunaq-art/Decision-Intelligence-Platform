@@ -1,8 +1,21 @@
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-Deployed-red)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 # 📊 Decision Intelligence Platform
 
 An interactive Business Intelligence Dashboard built using **Python, PostgreSQL, Streamlit and Plotly**.
 
 The project analyzes retail sales data and provides real-time business insights through KPIs, charts, analytics and recommendations.
+
+---
+
+## 🎯 Project Objective
+
+The Decision Intelligence Platform is designed to help businesses analyze retail sales data and make informed decisions through interactive dashboards, KPIs, visual analytics, inventory monitoring, and automated business recommendations.
+
+The platform integrates PostgreSQL, Supabase, Streamlit, and Plotly to provide a cloud-based analytics solution capable of delivering actionable business insights in real time.
 
 ---
 
@@ -21,6 +34,12 @@ The project analyzes retail sales data and provides real-time business insights 
 
 ---
 
+## 🌐 Live Demo
+
+https://decision-intelligence-platform-cw5a5vt8dvjnyyzukqmeor.streamlit.app/
+
+---
+
 ## 🛠 Tech Stack
 
 * Python
@@ -30,6 +49,15 @@ The project analyzes retail sales data and provides real-time business insights 
 * Pandas
 * Faker
 * SQL
+
+---
+
+## ☁️ Deployment
+
+- **Frontend:** Streamlit Cloud
+- **Database:** PostgreSQL (Supabase)
+- **Visualization:** Plotly
+- **Programming Language:** Python
 
 ---
 
@@ -99,6 +127,19 @@ Decision_Intelligence_Platform/
 
 ---
 
+## 📷 Project Screenshots
+
+The repository contains screenshots demonstrating:
+
+- Executive Dashboard
+- Analytics Dashboard
+- Recommendations Dashboard
+- PostgreSQL Database (pgAdmin)
+- Supabase Database Configuration
+- Streamlit Cloud Deployment
+
+---
+
 ## ▶️ Installation
 
 Clone the repository
@@ -123,19 +164,23 @@ python -m streamlit run src/dashboards/app.py
 
 ## 📌 Future Improvements
 
-* Machine Learning Sales Forecasting
-* Customer Segmentation
-* Profit Analysis
-* Download Reports
-* Cloud Database Integration
-* Online Deployment
-
+- Machine Learning Sales Forecasting
+- Customer Segmentation using RFM Analysis
+- Profit and Margin Analysis
+- Export Dashboard Reports (PDF/Excel)
+- User Authentication & Login System
+- Role-Based Dashboard Access
+- Real-Time Sales Data Integration
+- AI-powered Business Insights
 ---
 
 ## 👨‍💻 Author
 
 **Raunaq Ghosh**
 
-B.Tech Computer Science Engineering
+B.Tech Computer Science & Engineering  
+Kalinga Institute of Industrial Technology (KIIT)  
+Bhubaneswar, Odisha, India
 
-KIIT University
+GitHub:
+https://github.com/ghoshraunaq-art
