@@ -257,11 +257,15 @@ def total_orders(region="All",
 
     return execute_query(query, tuple(params))[0][0]
 
-def revenue_by_category(region="All"):
+def revenue_by_category(region="All",
+                        country="All",
+                        category="All",
+                        product="All",
+                        year="All"):
 
     query = """
         SELECT
-            c.category_name,
+            cat.category_name,
             SUM(s.quantity_sold * s.selling_price) AS revenue
 
         FROM sales s
@@ -272,8 +276,8 @@ def revenue_by_category(region="All"):
         JOIN products p
             ON oi.product_id = p.product_id
 
-        JOIN categories c
-            ON p.category_id = c.category_id
+        JOIN categories cat
+            ON p.category_id = cat.category_id
 
         JOIN orders o
             ON oi.order_id = o.order_id
@@ -283,19 +287,41 @@ def revenue_by_category(region="All"):
 
         JOIN regions r
             ON cu.region_id = r.region_id
+
+        JOIN countries c
+            ON r.country_id = c.country_id
+
+        WHERE 1=1
     """
+
+    params = []
 
     if region != "All":
-        query += f"""
-        WHERE r.region_name = '{region}'
-        """
+        query += " AND r.region_name = %s"
+        params.append(region)
+
+    if country != "All":
+        query += " AND c.country_name = %s"
+        params.append(country)
+
+    if category != "All":
+        query += " AND cat.category_name = %s"
+        params.append(category)
+
+    if product != "All":
+        query += " AND p.product_name = %s"
+        params.append(product)
+
+    if year != "All":
+        query += " AND EXTRACT(YEAR FROM o.order_date) = %s"
+        params.append(year)
 
     query += """
-        GROUP BY c.category_name
-        ORDER BY revenue DESC;
+        GROUP BY cat.category_name
+        ORDER BY revenue DESC
     """
 
-    return execute_query(query)
+    return execute_query(query, tuple(params))
 
 def revenue_by_region(region="All"):
 
