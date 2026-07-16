@@ -390,10 +390,13 @@ def revenue_by_region(region="All",
     return execute_query(query, tuple(params))
 
 
-def top_products():
+def top_products(region="All",
+                 country="All",
+                 category="All",
+                 product="All",
+                 year="All"):
 
-    return execute_query("""
-
+    query = """
         SELECT
             p.product_name,
             SUM(s.quantity_sold) AS total_sold
@@ -403,50 +406,132 @@ def top_products():
         JOIN order_items oi
             ON s.order_item_id = oi.order_item_id
 
+        JOIN orders o
+            ON oi.order_id = o.order_id
+
+        JOIN customers cu
+            ON o.customer_id = cu.customer_id
+
+        JOIN regions r
+            ON cu.region_id = r.region_id
+
+        JOIN countries c
+            ON r.country_id = c.country_id
+
         JOIN products p
             ON oi.product_id = p.product_id
 
+        JOIN categories cat
+            ON p.category_id = cat.category_id
+
+        WHERE 1=1
+    """
+
+    params = []
+
+    if region != "All":
+        query += " AND r.region_name = %s"
+        params.append(region)
+
+    if country != "All":
+        query += " AND c.country_name = %s"
+        params.append(country)
+
+    if category != "All":
+        query += " AND cat.category_name = %s"
+        params.append(category)
+
+    if product != "All":
+        query += " AND p.product_name = %s"
+        params.append(product)
+
+    if year != "All":
+        query += " AND EXTRACT(YEAR FROM o.order_date) = %s"
+        params.append(year)
+
+    query += """
         GROUP BY p.product_name
-
         ORDER BY total_sold DESC
+        LIMIT 10
+    """
 
-        LIMIT 10;
+    return execute_query(query, tuple(params))
 
-    """)
+def top_customers(region="All",
+                  country="All",
+                  category="All",
+                  product="All",
+                  year="All"):
 
-
-def top_customers():
-
-    return execute_query("""
-
+    query = """
         SELECT
-            c.customer_name,
-            SUM(s.quantity_sold * s.selling_price) AS revenue
+            cu.customer_name,
+            SUM(s.quantity_sold*s.selling_price) AS revenue
 
         FROM sales s
 
         JOIN order_items oi
-            ON s.order_item_id = oi.order_item_id
+            ON s.order_item_id=oi.order_item_id
 
         JOIN orders o
-            ON oi.order_id = o.order_id
+            ON oi.order_id=o.order_id
 
-        JOIN customers c
-            ON o.customer_id = c.customer_id
+        JOIN customers cu
+            ON o.customer_id=cu.customer_id
 
-        GROUP BY c.customer_name
+        JOIN regions r
+            ON cu.region_id=r.region_id
 
+        JOIN countries c
+            ON r.country_id=c.country_id
+
+        JOIN products p
+            ON oi.product_id=p.product_id
+
+        JOIN categories cat
+            ON p.category_id=cat.category_id
+
+        WHERE 1=1
+    """
+
+    params=[]
+
+    if region!="All":
+        query+=" AND r.region_name=%s"
+        params.append(region)
+
+    if country!="All":
+        query+=" AND c.country_name=%s"
+        params.append(country)
+
+    if category!="All":
+        query+=" AND cat.category_name=%s"
+        params.append(category)
+
+    if product!="All":
+        query+=" AND p.product_name=%s"
+        params.append(product)
+
+    if year!="All":
+        query+=" AND EXTRACT(YEAR FROM o.order_date)=%s"
+        params.append(year)
+
+    query+="""
+        GROUP BY cu.customer_name
         ORDER BY revenue DESC
+        LIMIT 10
+    """
 
-        LIMIT 10;
-
-    """)
+    return execute_query(query,tuple(params))
 
 
-def inventory_status():
+def inventory_status(region="All",
+                     country="All",
+                     category="All",
+                     product="All",
+                     year="All"):
 
-    return execute_query("""
-
+    query="""
         SELECT
             p.product_name,
             i.stock_quantity
@@ -454,40 +539,136 @@ def inventory_status():
         FROM inventory i
 
         JOIN products p
-            ON i.product_id = p.product_id
+            ON i.product_id=p.product_id
 
-        ORDER BY i.stock_quantity ASC
+        JOIN categories cat
+            ON p.category_id=cat.category_id
 
-        LIMIT 10;
+        JOIN order_items oi
+            ON p.product_id=oi.product_id
 
-    """)
+        JOIN orders o
+            ON oi.order_id=o.order_id
 
-def monthly_revenue():
+        JOIN customers cu
+            ON o.customer_id=cu.customer_id
 
-    return execute_query("""
+        JOIN regions r
+            ON cu.region_id=r.region_id
 
+        JOIN countries c
+            ON r.country_id=c.country_id
+
+        WHERE 1=1
+    """
+
+    params=[]
+
+    if region!="All":
+        query+=" AND r.region_name=%s"
+        params.append(region)
+
+    if country!="All":
+        query+=" AND c.country_name=%s"
+        params.append(country)
+
+    if category!="All":
+        query+=" AND cat.category_name=%s"
+        params.append(category)
+
+    if product!="All":
+        query+=" AND p.product_name=%s"
+        params.append(product)
+
+    if year!="All":
+        query+=" AND EXTRACT(YEAR FROM o.order_date)=%s"
+        params.append(year)
+
+    query+="""
+        GROUP BY p.product_name,i.stock_quantity
+        ORDER BY i.stock_quantity
+        LIMIT 10
+    """
+
+    return execute_query(query,tuple(params))
+
+def monthly_revenue(region="All",
+                    country="All",
+                    category="All",
+                    product="All",
+                    year="All"):
+
+    query="""
         SELECT
-            TO_CHAR(sale_date,'Mon YYYY') AS month,
-            SUM(quantity_sold*selling_price) AS revenue
+            TO_CHAR(o.order_date,'Mon YYYY'),
+            SUM(s.quantity_sold*s.selling_price)
 
-        FROM sales
+        FROM sales s
 
-        GROUP BY
-            DATE_TRUNC('month', sale_date),
-            TO_CHAR(sale_date,'Mon YYYY')
+        JOIN order_items oi
+            ON s.order_item_id=oi.order_item_id
 
-        ORDER BY
-            DATE_TRUNC('month', sale_date);
+        JOIN orders o
+            ON oi.order_id=o.order_id
 
-    """)
+        JOIN customers cu
+            ON o.customer_id=cu.customer_id
+
+        JOIN regions r
+            ON cu.region_id=r.region_id
+
+        JOIN countries c
+            ON r.country_id=c.country_id
+
+        JOIN products p
+            ON oi.product_id=p.product_id
+
+        JOIN categories cat
+            ON p.category_id=cat.category_id
+
+        WHERE 1=1
+    """
+
+    params=[]
+
+    if region!="All":
+        query+=" AND r.region_name=%s"
+        params.append(region)
+
+    if country!="All":
+        query+=" AND c.country_name=%s"
+        params.append(country)
+
+    if category!="All":
+        query+=" AND cat.category_name=%s"
+        params.append(category)
+
+    if product!="All":
+        query+=" AND p.product_name=%s"
+        params.append(product)
+
+    if year!="All":
+        query+=" AND EXTRACT(YEAR FROM o.order_date)=%s"
+        params.append(year)
+
+    query+="""
+        GROUP BY DATE_TRUNC('month',o.order_date),
+                 TO_CHAR(o.order_date,'Mon YYYY')
+        ORDER BY DATE_TRUNC('month',o.order_date)
+    """
+
+    return execute_query(query,tuple(params))
 
 
-def category_sales():
+def category_sales(region="All",
+                   country="All",
+                   category="All",
+                   product="All",
+                   year="All"):
 
-    return execute_query("""
-
+    query="""
         SELECT
-            c.category_name,
+            cat.category_name,
             SUM(s.quantity_sold)
 
         FROM sales s
@@ -495,17 +676,56 @@ def category_sales():
         JOIN order_items oi
             ON s.order_item_id=oi.order_item_id
 
+        JOIN orders o
+            ON oi.order_id=o.order_id
+
+        JOIN customers cu
+            ON o.customer_id=cu.customer_id
+
+        JOIN regions r
+            ON cu.region_id=r.region_id
+
+        JOIN countries c
+            ON r.country_id=c.country_id
+
         JOIN products p
             ON oi.product_id=p.product_id
 
-        JOIN categories c
-            ON p.category_id=c.category_id
+        JOIN categories cat
+            ON p.category_id=cat.category_id
 
-        GROUP BY c.category_name
+        WHERE 1=1
+    """
 
-        ORDER BY 2 DESC;
+    params=[]
 
-    """)
+    if region!="All":
+        query+=" AND r.region_name=%s"
+        params.append(region)
+
+    if country!="All":
+        query+=" AND c.country_name=%s"
+        params.append(country)
+
+    if category!="All":
+        query+=" AND cat.category_name=%s"
+        params.append(category)
+
+    if product!="All":
+        query+=" AND p.product_name=%s"
+        params.append(product)
+
+    if year!="All":
+        query+=" AND EXTRACT(YEAR FROM o.order_date)=%s"
+        params.append(year)
+
+    query+="""
+        GROUP BY cat.category_name
+        ORDER BY 2 DESC
+    """
+
+    return execute_query(query,tuple(params))
+
 def available_regions(country="All"):
 
     query = """
