@@ -164,7 +164,6 @@ Monitor revenue, customers, products, inventory and business performance through
             selected_year
         )
     )
-
     st.markdown("---")
 
     st.subheader("📌 Executive Summary")
@@ -450,10 +449,48 @@ elif page == "Analytics":
 
     st.subheader("🏆 Top Selling Products")
 
+    search_product = st.text_input(
+        "🔍 Search Product",
+        key="search_product"
+    )
+
+    if search_product:
+        products_df = products_df[
+            products_df["Product"].str.contains(
+                search_product,
+                case=False
+            )
+        ]
+
+    sort_order = st.selectbox(
+        "Sort Products",
+        [
+            "Highest Sales",
+            "Lowest Sales"
+        ]
+    )
+
+    if sort_order == "Lowest Sales":
+        products_df = products_df.sort_values(
+            "Units Sold"
+        )
+    else:
+        products_df = products_df.sort_values(
+            "Units Sold",
+            ascending=False
+        )
+
     st.dataframe(
         products_df,
         use_container_width=True,
         hide_index=True
+    )
+
+    st.download_button(
+        "⬇ Download Top Products CSV",
+        products_df.to_csv(index=False),
+        "top_products.csv",
+        "text/csv"
     )
 
     st.markdown("---")
@@ -471,10 +508,30 @@ elif page == "Analytics":
 
     st.subheader("👑 Top Customers")
 
+    search_customer = st.text_input(
+    "🔍 Search Customer",
+    key="search_customer"
+    )
+
+if search_customer:
+    customers_df = customers_df[
+        customers_df["Customer"].str.contains(
+            search_customer,
+            case=False
+        )
+    ]
+
     st.dataframe(
         customers_df,
         use_container_width=True,
         hide_index=True
+    )
+
+    st.download_button(
+    "⬇ Download Top Customers CSV",
+    customers_df.to_csv(index=False),
+    "top_customers.csv",
+    "text/csv"
     )
 
     st.markdown("---")
@@ -492,9 +549,18 @@ elif page == "Analytics":
     st.subheader("📦 Inventory Status")
 
     st.dataframe(
-        inventory_df,
-        use_container_width=True,
-        hide_index=True
+        inventory_df.style.background_gradient(
+            subset=["Stock"],
+            cmap="RdYlGn"
+        ),
+    use_container_width=True
+    )
+
+    st.download_button(
+    "⬇ Download Inventory CSV",
+    inventory_df.to_csv(index=False),
+    "inventory.csv",
+    "text/csv"
     )
 
     st.markdown("---")
