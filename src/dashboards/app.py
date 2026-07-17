@@ -135,34 +135,34 @@ Monitor revenue, customers, products, inventory and business performance through
     st.markdown("---")
 
     show_kpi_cards(
-    total_revenue(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
-    ),
-    total_products_sold(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
-    ),
-    total_customers(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
-    ),
-    total_orders(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
-    )
+        total_revenue(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        total_products_sold(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        total_customers(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        total_orders(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        )
     )
 
     st.markdown("---")
@@ -369,20 +369,91 @@ Monitor revenue, customers, products, inventory and business performance through
 
 elif page == "Analytics":
 
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("Analytics Filters")
+
+    country_options = ["All"] + [
+        row[0] for row in available_countries()
+    ]
+
+    selected_country = st.sidebar.selectbox(
+        "Country",
+        country_options,
+        key="analytics_country"
+    )
+
+    region_options = ["All"] + [
+        row[0] for row in available_regions(selected_country)
+    ]
+
+    selected_region = st.sidebar.selectbox(
+        "Region",
+        region_options,
+        key="analytics_region"
+    )
+
+    category_options = ["All"] + [
+        row[0] for row in available_categories(
+            selected_region,
+            selected_country
+        )
+    ]
+
+    selected_category = st.sidebar.selectbox(
+        "Category",
+        category_options,
+        key="analytics_category"
+    )
+
+    product_options = ["All"] + [
+        row[0] for row in available_products(
+            selected_region,
+            selected_country,
+            selected_category
+        )
+    ]
+
+    selected_product = st.sidebar.selectbox(
+        "Product",
+        product_options,
+        key="analytics_product"
+    )
+
+    year_options = ["All"] + [
+        int(row[0]) for row in available_years(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product
+        )
+    ]
+
+    selected_year = st.sidebar.selectbox(
+        "Year",
+        year_options,
+        key="analytics_year"
+    )
+
     st.title("📈 Analytics")
 
     st.markdown("---")
 
     products_df = pd.DataFrame(
-        top_products(),
-        columns=["Product", "Units Sold"]
+        top_products(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        )
     )
 
     st.subheader("🏆 Top Selling Products")
 
     st.dataframe(
         products_df,
-        use_container_width=True
+        use_container_width=True,
+        hide_index=True
     )
 
     st.markdown("---")
@@ -402,28 +473,40 @@ elif page == "Analytics":
 
     st.dataframe(
         customers_df,
-        use_container_width=True
+        use_container_width=True,
+        hide_index=True
     )
 
     st.markdown("---")
 
     inventory_df = pd.DataFrame(
-        inventory_status(),
-        columns=["Product", "Stock"]
+        inventory_status(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        )
     )
 
     st.subheader("📦 Inventory Status")
 
     st.dataframe(
         inventory_df,
-        use_container_width=True
+        use_container_width=True,
+        hide_index=True
     )
 
     st.markdown("---")
 
     monthly_df = pd.DataFrame(
-        monthly_revenue(),
-        columns=["Month", "Revenue"]
+        monthly_revenue(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        )
     )
 
     fig_month = px.line(
@@ -444,8 +527,13 @@ elif page == "Analytics":
     st.markdown("---")
 
     category_sales_df = pd.DataFrame(
-        category_sales(),
-        columns=["Category", "Units Sold"]
+        category_sales(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        )
     )
 
     fig_sales = px.pie(
