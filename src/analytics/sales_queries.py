@@ -466,63 +466,63 @@ def top_customers(region="All",
     query = """
         SELECT
             cu.customer_name,
-            SUM(s.quantity_sold*s.selling_price) AS revenue
+            SUM(s.quantity_sold * s.selling_price) AS revenue
 
         FROM sales s
 
         JOIN order_items oi
-            ON s.order_item_id=oi.order_item_id
+            ON s.order_item_id = oi.order_item_id
 
         JOIN orders o
-            ON oi.order_id=o.order_id
+            ON oi.order_id = o.order_id
 
         JOIN customers cu
-            ON o.customer_id=cu.customer_id
+            ON o.customer_id = cu.customer_id
 
         JOIN regions r
-            ON cu.region_id=r.region_id
+            ON cu.region_id = r.region_id
 
         JOIN countries c
-            ON r.country_id=c.country_id
+            ON r.country_id = c.country_id
 
         JOIN products p
-            ON oi.product_id=p.product_id
+            ON oi.product_id = p.product_id
 
         JOIN categories cat
-            ON p.category_id=cat.category_id
+            ON p.category_id = cat.category_id
 
         WHERE 1=1
     """
 
-    params=[]
+    params = []
 
-    if region!="All":
-        query+=" AND r.region_name=%s"
+    if region != "All":
+        query += " AND r.region_name = %s"
         params.append(region)
 
-    if country!="All":
-        query+=" AND c.country_name=%s"
+    if country != "All":
+        query += " AND c.country_name = %s"
         params.append(country)
 
-    if category!="All":
-        query+=" AND cat.category_name=%s"
+    if category != "All":
+        query += " AND cat.category_name = %s"
         params.append(category)
 
-    if product!="All":
-        query+=" AND p.product_name=%s"
+    if product != "All":
+        query += " AND p.product_name = %s"
         params.append(product)
 
-    if year!="All":
-        query+=" AND EXTRACT(YEAR FROM o.order_date)=%s"
+    if year != "All":
+        query += " AND EXTRACT(YEAR FROM o.order_date) = %s"
         params.append(year)
 
-    query+="""
+    query += """
         GROUP BY cu.customer_name
         ORDER BY revenue DESC
         LIMIT 10
     """
 
-    return execute_query(query,tuple(params))
+    return execute_query(query, tuple(params))
 
 
 def inventory_status(region="All",
@@ -531,7 +531,7 @@ def inventory_status(region="All",
                      product="All",
                      year="All"):
 
-    query="""
+    query = """
         SELECT
             p.product_name,
             i.stock_quantity
@@ -539,25 +539,25 @@ def inventory_status(region="All",
         FROM inventory i
 
         JOIN products p
-            ON i.product_id=p.product_id
+            ON i.product_id = p.product_id
 
         JOIN categories cat
-            ON p.category_id=cat.category_id
+            ON p.category_id = cat.category_id
 
         JOIN order_items oi
-            ON p.product_id=oi.product_id
+            ON p.product_id = oi.product_id
 
         JOIN orders o
-            ON oi.order_id=o.order_id
+            ON oi.order_id = o.order_id
 
         JOIN customers cu
-            ON o.customer_id=cu.customer_id
+            ON o.customer_id = cu.customer_id
 
         JOIN regions r
-            ON cu.region_id=r.region_id
+            ON cu.region_id = r.region_id
 
         JOIN countries c
-            ON r.country_id=c.country_id
+            ON r.country_id = c.country_id
 
         WHERE 1=1
     """
@@ -584,13 +584,18 @@ def inventory_status(region="All",
         query+=" AND EXTRACT(YEAR FROM o.order_date)=%s"
         params.append(year)
 
-    query+="""
-        GROUP BY p.product_name,i.stock_quantity
-        ORDER BY i.stock_quantity
+    query += """
+        GROUP BY
+            p.product_name,
+            i.stock_quantity
+
+        ORDER BY
+            i.stock_quantity ASC
+
         LIMIT 10
     """
 
-    return execute_query(query,tuple(params))
+    return execute_query(query, tuple(params))
 
 def monthly_revenue(region="All",
                     country="All",
@@ -651,13 +656,16 @@ def monthly_revenue(region="All",
         query+=" AND EXTRACT(YEAR FROM o.order_date)=%s"
         params.append(year)
 
-    query+="""
-        GROUP BY DATE_TRUNC('month',o.order_date),
-                 TO_CHAR(o.order_date,'Mon YYYY')
-        ORDER BY DATE_TRUNC('month',o.order_date)
+    query += """
+        GROUP BY
+            DATE_TRUNC('month',o.order_date),
+            TO_CHAR(o.order_date,'Mon YYYY')
+
+        ORDER BY
+            DATE_TRUNC('month',o.order_date)
     """
 
-    return execute_query(query,tuple(params))
+    return execute_query(query, tuple(params))
 
 
 def category_sales(region="All",
@@ -719,12 +727,15 @@ def category_sales(region="All",
         query+=" AND EXTRACT(YEAR FROM o.order_date)=%s"
         params.append(year)
 
-    query+="""
-        GROUP BY cat.category_name
-        ORDER BY 2 DESC
+    query += """
+        GROUP BY
+            cat.category_name
+
+        ORDER BY
+            2 DESC
     """
 
-    return execute_query(query,tuple(params))
+    return execute_query(query, tuple(params))
 
 def available_regions(country="All"):
 

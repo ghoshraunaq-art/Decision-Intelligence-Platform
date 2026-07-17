@@ -163,7 +163,7 @@ Monitor revenue, customers, products, inventory and business performance through
         selected_product,
         selected_year
     )
-)
+    )
 
     st.markdown("---")
 
@@ -203,25 +203,25 @@ Monitor revenue, customers, products, inventory and business performance through
 
     with left:
         show_revenue_category_chart(
-    revenue_by_category(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
-    )
-)
+            revenue_by_category(
+                selected_region,
+                selected_country,
+                selected_category,
+                selected_product,
+                selected_year
+            )
+        )
 
     with right:
         show_region_chart(
-    revenue_by_region(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
-    )
-)
+            revenue_by_region(
+                selected_region,
+                selected_country,
+                selected_category,
+                selected_product,
+                selected_year
+            )
+        )
 
     st.markdown("---")
 
@@ -388,9 +388,15 @@ elif page == "Analytics":
     st.markdown("---")
 
     customers_df = pd.DataFrame(
-        top_customers(),
-        columns=["Customer", "Revenue"]
-    )
+    top_customers(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    ),
+    columns=["Customer", "Revenue"]
+)
 
     st.subheader("👑 Top Customers")
 
