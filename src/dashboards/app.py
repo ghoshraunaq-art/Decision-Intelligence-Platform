@@ -444,7 +444,8 @@ elif page == "Analytics":
             selected_category,
             selected_product,
             selected_year
-        )
+        ),
+    columns=["Product", "Units Sold"]
     )
 
     st.subheader("🏆 Top Selling Products")
@@ -495,43 +496,44 @@ elif page == "Analytics":
 
     st.markdown("---")
 
-    customers_df = pd.DataFrame(
-    top_customers(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
-    ),
-    columns=["Customer", "Revenue"]
-)
-
     st.subheader("👑 Top Customers")
 
-    search_customer = st.text_input(
-    "🔍 Search Customer",
-    key="search_customer"
+    customers_df = pd.DataFrame(
+        top_customers(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        columns=["Customer","Revenue"]
     )
 
-if search_customer:
-    customers_df = customers_df[
-        customers_df["Customer"].str.contains(
-            search_customer,
-            case=False
-        )
-    ]
+    search_customer = st.text_input(
+        "🔍 Search Customer",
+        key="search_customer"
+    )
+
+    if search_customer:
+        customers_df = customers_df[
+            customers_df["Customer"].str.contains(
+                search_customer,
+                case=False,
+                na=False
+            )
+        ]
 
     st.dataframe(
         customers_df,
-        use_container_width=True,
+        width="stretch",
         hide_index=True
     )
 
     st.download_button(
-    "⬇ Download Top Customers CSV",
-    customers_df.to_csv(index=False),
-    "top_customers.csv",
-    "text/csv"
+        "⬇ Download Top Customers CSV",
+        customers_df.to_csv(index=False),
+        "top_customers.csv",
+        "text/csv"
     )
 
     st.markdown("---")
@@ -543,7 +545,8 @@ if search_customer:
             selected_category,
             selected_product,
             selected_year
-        )
+        ),
+    columns=["Product", "Stock"]
     )
 
     st.subheader("📦 Inventory Status")
@@ -572,7 +575,8 @@ if search_customer:
             selected_category,
             selected_product,
             selected_year
-        )
+        ),
+    columns=["Month", "Revenue"]
     )
 
     fig_month = px.line(
@@ -599,7 +603,8 @@ if search_customer:
             selected_category,
             selected_product,
             selected_year
-        )
+        ),
+    columns=["Category", "Units Sold"]
     )
 
     fig_sales = px.pie(
