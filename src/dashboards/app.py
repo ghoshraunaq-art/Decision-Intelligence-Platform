@@ -12,6 +12,7 @@ from components.recommendations import show_recommendations
 from components.insights import show_insights
 from components.forecast import show_forecast
 from components.customer_segments import show_customer_segments
+from components.forecast import show_forecast
 from components.anomaly_detection import show_anomaly_detection
 from components.executive_insights import show_executive_insights
 
@@ -696,7 +697,26 @@ elif page == "Analytics":
         fig_sales,
         use_container_width=True
     )
+     
+    st.markdown("---")
 
+    st.subheader("🔮 Revenue Forecast")
+
+    forecast_fig = show_forecast(
+        monthly_revenue(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        )
+    )
+
+    if forecast_fig:
+        st.plotly_chart(
+            forecast_fig,
+            use_container_width=True
+        )
 
 # ===========================
 # RECOMMENDATIONS
