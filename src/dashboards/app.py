@@ -12,6 +12,7 @@ from components.recommendations import show_recommendations
 from components.insights import show_insights
 from components.forecast import show_forecast
 from components.customer_segments import show_customer_segments
+from components.anomaly_detection import show_anomaly_detection
 
 import streamlit as st
 import pandas as pd
@@ -391,6 +392,18 @@ Monitor revenue, customers, products, inventory and business performance through
     st.markdown("---")
 
     show_forecast(
+        monthly_revenue(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        )
+    )
+
+    st.markdown("---")
+
+    show_anomaly_detection(
         monthly_revenue(
             selected_region,
             selected_country,
