@@ -9,6 +9,8 @@ from components.charts import (
     show_region_chart
 )
 from components.recommendations import show_recommendations
+from components.insights import show_insights
+from components.forecast import show_forecast
 
 import streamlit as st
 import pandas as pd
@@ -352,6 +354,49 @@ Monitor revenue, customers, products, inventory and business performance through
         )
 
     st.markdown("---")
+
+    show_insights(
+    monthly_revenue(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    ),
+    category_sales(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    ),
+    revenue_by_region(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    ),
+    inventory_status(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    )
+)
+
+    st.markdown("---")
+
+    show_forecast(
+    monthly_revenue(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    )
+)
 
     show_recommendations(
         inventory_status(
