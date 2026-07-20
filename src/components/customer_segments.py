@@ -20,6 +20,9 @@ def show_customer_segments(data):
         ]
     )
 
+    df["Revenue"] = df["Revenue"].astype(float)
+    df["Frequency"] = df["Frequency"].astype(int)
+
     revenue75=df["Revenue"].quantile(.75)
     revenue40=df["Revenue"].quantile(.40)
 
