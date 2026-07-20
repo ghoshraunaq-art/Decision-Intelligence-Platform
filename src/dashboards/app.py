@@ -11,6 +11,7 @@ from components.charts import (
 from components.recommendations import show_recommendations
 from components.insights import show_insights
 from components.forecast import show_forecast
+from components.customer_segments import show_customer_segments
 
 import streamlit as st
 import pandas as pd
@@ -32,7 +33,8 @@ from analytics.sales_queries import (
     top_customers,
     inventory_status,
     monthly_revenue,
-    category_sales
+    category_sales,
+    customer_segmentation,
 )
 st.set_page_config(
     page_title="Decision Intelligence Platform",
@@ -389,14 +391,26 @@ Monitor revenue, customers, products, inventory and business performance through
     st.markdown("---")
 
     show_forecast(
-    monthly_revenue(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
+        monthly_revenue(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        )
     )
-)
+
+    st.markdown("---")
+
+    show_customer_segments(
+        customer_segmentation(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        )
+    )
 
     show_recommendations(
         inventory_status(

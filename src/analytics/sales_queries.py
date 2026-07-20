@@ -905,3 +905,78 @@ def available_years(region="All",
     """
 
     return execute_query(query, tuple(params))
+
+def customer_segmentation(
+    region="All",
+    country="All",
+    category="All",
+    product="All",
+    year="All"
+):
+
+    query = """
+    SELECT
+
+        cu.customer_name,
+
+        MAX(o.order_date) AS last_purchase,
+
+        COUNT(DISTINCT o.order_id) AS frequency,
+
+        SUM(s.quantity_sold*s.selling_price) AS monetary
+
+    FROM customers cu
+
+    JOIN orders o
+        ON cu.customer_id=o.customer_id
+
+    JOIN order_items oi
+        ON o.order_id=oi.order_id
+
+    JOIN sales s
+        ON oi.order_item_id=s.order_item_id
+
+    JOIN products p
+        ON oi.product_id=p.product_id
+
+    JOIN categories cat
+        ON p.category_id=cat.category_id
+
+    JOIN regions r
+        ON cu.region_id=r.region_id
+
+    JOIN countries c
+        ON r.country_id=c.country_id
+
+    WHERE 1=1
+    """
+
+    params=[]
+
+    if region!="All":
+        query+=" AND r.region_name=%s"
+        params.append(region)
+
+    if country!="All":
+        query+=" AND c.country_name=%s"
+        params.append(country)
+
+    if category!="All":
+        query+=" AND cat.category_name=%s"
+        params.append(category)
+
+    if product!="All":
+        query+=" AND p.product_name=%s"
+        params.append(product)
+
+    if year!="All":
+        query+=" AND EXTRACT(YEAR FROM o.order_date)=%s"
+        params.append(year)
+
+    query+="""
+    GROUP BY cu.customer_name
+
+    ORDER BY monetary DESC
+    """
+
+    return execute_query(query,tuple(params))
