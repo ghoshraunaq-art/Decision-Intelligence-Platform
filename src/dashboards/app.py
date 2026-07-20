@@ -13,6 +13,7 @@ from components.insights import show_insights
 from components.forecast import show_forecast
 from components.customer_segments import show_customer_segments
 from components.anomaly_detection import show_anomaly_detection
+from components.executive_insights import show_executive_insights
 
 import streamlit as st
 import pandas as pd
@@ -517,9 +518,34 @@ elif page == "Analytics":
             selected_product,
             selected_year
         ),
-    columns=["Product", "Units Sold"]
+        columns=["Product", "Units Sold"]
     )
 
+
+    customers_df = pd.DataFrame(
+        top_customers(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        columns=["Customer", "Revenue"]
+    )
+
+
+    inventory_df = pd.DataFrame(
+        inventory_status(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        columns=["Product", "Stock"]
+    )
+
+    
     st.subheader("🏆 Top Selling Products")
 
     search_product = st.text_input(
@@ -570,17 +596,6 @@ elif page == "Analytics":
 
     st.subheader("👑 Top Customers")
 
-    customers_df = pd.DataFrame(
-        top_customers(
-            selected_region,
-            selected_country,
-            selected_category,
-            selected_product,
-            selected_year
-        ),
-        columns=["Customer","Revenue"]
-    )
-
     search_customer = st.text_input(
         "🔍 Search Customer",
         key="search_customer"
@@ -609,17 +624,6 @@ elif page == "Analytics":
     )
 
     st.markdown("---")
-
-    inventory_df = pd.DataFrame(
-        inventory_status(
-            selected_region,
-            selected_country,
-            selected_category,
-            selected_product,
-            selected_year
-        ),
-    columns=["Product", "Stock"]
-    )
 
     st.subheader("📦 Inventory Status")
 
