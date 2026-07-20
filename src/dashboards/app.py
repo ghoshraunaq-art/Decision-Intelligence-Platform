@@ -13,6 +13,7 @@ from components.insights import show_insights
 from components.forecast import show_forecast
 from components.customer_segments import show_customer_segments
 from components.forecast import show_forecast
+from components.business_health import show_business_health
 from components.anomaly_detection import show_anomaly_detection
 from components.executive_insights import show_executive_insights
 
@@ -425,6 +426,46 @@ Monitor revenue, customers, products, inventory and business performance through
             selected_product,
             selected_year
         )
+    )
+
+    st.markdown("---")
+
+
+    inventory_for_health = pd.DataFrame(
+        inventory_status(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        columns=["Product","Stock"]
+    )
+
+
+    show_business_health(
+        total_revenue(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        total_orders(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        total_customers(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        inventory_for_health
     )
 
     show_recommendations(
