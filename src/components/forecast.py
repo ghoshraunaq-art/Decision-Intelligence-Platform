@@ -4,26 +4,28 @@ import plotly.express as px
 
 def show_forecast(data):
 
-    st_title = "📈 Revenue Forecast"
-
-    if data.empty:
-        return
+    if not data:
+        return None
 
     df = pd.DataFrame(
         data,
         columns=["Month", "Revenue"]
     )
 
-    df["Month"] = pd.to_datetime(df["Month"])
+    df["Month"] = pd.to_datetime(
+        df["Month"]
+    )
 
-    df = df.sort_values("Month")
+    df = df.sort_values(
+        "Month"
+    )
 
     fig = px.line(
         df,
         x="Month",
         y="Revenue",
         markers=True,
-        title=st_title
+        title="Revenue Trend Forecast"
     )
 
     return fig
