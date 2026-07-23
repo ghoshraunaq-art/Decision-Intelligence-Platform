@@ -12,7 +12,6 @@ from components.recommendations import show_recommendations
 from components.insights import show_insights
 from components.forecast import show_forecast
 from components.customer_segments import show_customer_segments
-from components.forecast import show_forecast
 from components.business_health import show_business_health
 from components.customer_intelligence import show_customer_intelligence
 from components.anomaly_detection import show_anomaly_detection
@@ -21,6 +20,7 @@ from components.executive_insights import show_executive_insights
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 
 from analytics.sales_queries import (
     total_revenue,
@@ -41,6 +41,27 @@ from analytics.sales_queries import (
     category_sales,
     customer_segmentation,
 )
+
+def improve_chart_layout(fig):
+
+    fig.update_layout(
+        margin=dict(
+            b=120
+        ),
+        height=500
+    )
+
+    fig.update_xaxes(
+        tickangle=0,
+        automargin=True,
+        tickmode="linear",
+        tickfont=dict(
+            size=11
+        )
+    )
+
+    return fig
+
 st.set_page_config(
     page_title="Decision Intelligence Platform",
     page_icon="📊",
@@ -239,21 +260,33 @@ Monitor revenue, customers, products, inventory and business performance through
 
     products_df = pd.DataFrame(
        top_products(
-    selected_region,
-    selected_country,
-    selected_category,
-    selected_product,
-    selected_year
-),
-        columns=["Product", "Units Sold"]
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    ),
+    columns=["Product", "Units Sold"]
     )
 
     fig_products = px.bar(
-        products_df,
-        x="Units Sold",
-        y="Product",
-        orientation="h",
-        title="Top Selling Products"
+    products_df,
+    x="Units Sold",
+    y="Product",
+    orientation="h",
+    title="Top Selling Products"
+)
+
+    fig_products.update_layout(
+        template="plotly_dark",
+        height=500,
+        xaxis=dict(
+            dtick=5,
+            tickfont=dict(size=12)
+        ),
+        yaxis=dict(
+            tickfont=dict(size=13)
+        )
     )
 
     with left:
@@ -264,21 +297,33 @@ Monitor revenue, customers, products, inventory and business performance through
 
     customers_df = pd.DataFrame(
        top_customers(
-    selected_region,
-    selected_country,
-    selected_category,
-    selected_product,
-    selected_year
-),
-        columns=["Customer", "Revenue"]
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    ),
+    columns=["Customer", "Revenue"]
     )
 
     fig_customers = px.bar(
-        customers_df,
-        x="Revenue",
-        y="Customer",
-        orientation="h",
-        title="Top Customers"
+    customers_df,
+    x="Revenue",
+    y="Customer",
+    orientation="h",
+    title="Top Customers"
+)
+
+    fig_customers.update_layout(
+        template="plotly_dark",
+        height=500,
+        xaxis=dict(
+            tickformat="~s",
+            tickfont=dict(size=12)
+        ),
+        yaxis=dict(
+            tickfont=dict(size=13)
+        )
     )
 
     with right:
@@ -298,8 +343,8 @@ Monitor revenue, customers, products, inventory and business performance through
     selected_category,
     selected_product,
     selected_year
-),
-        columns=["Product", "Stock"]
+        ),
+    columns=["Product", "Stock"]
     )
 
     st.dataframe(
@@ -318,9 +363,11 @@ Monitor revenue, customers, products, inventory and business performance through
     selected_category,
     selected_product,
     selected_year
-),
+        ),
         columns=["Month", "Revenue"]
     )
+
+    monthly_df["Month"] = pd.to_datetime(monthly_df["Month"])
 
     fig_month = px.line(
         monthly_df,
@@ -328,6 +375,18 @@ Monitor revenue, customers, products, inventory and business performance through
         y="Revenue",
         markers=True,
         title="Monthly Revenue"
+    )
+
+    fig_month.update_layout(
+        template="plotly_dark",
+        height=500
+    )
+
+    fig_month.update_xaxes(
+        tickformat="%b %Y",
+        dtick="M1",
+        tickangle=-45,
+        tickfont=dict(size=12)
     )
 
     with left:
@@ -338,13 +397,13 @@ Monitor revenue, customers, products, inventory and business performance through
 
     category_sales_df = pd.DataFrame(
         category_sales(
-    selected_region,
-    selected_country,
-    selected_category,
-    selected_product,
-    selected_year
-),
-        columns=["Category", "Units Sold"]
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    ),
+    columns=["Category", "Units Sold"]
     )
 
     fig_sales = px.pie(
