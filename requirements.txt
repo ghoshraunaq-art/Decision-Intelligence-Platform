@@ -4,3 +4,4 @@ pandas
 faker
 psycopg2-binary
 scikit-learn
+matplotlib
