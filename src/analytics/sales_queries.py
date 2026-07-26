@@ -1,4 +1,5 @@
 from database.db_connection import get_connection
+from datetime import datetime
 
 
 def execute_query(query, params=None):
@@ -980,3 +981,49 @@ def customer_segmentation(
     """
 
     return execute_query(query,tuple(params))
+
+def customer_churn_prediction(
+    region="All",
+    country="All",
+    category="All",
+    product="All",
+    year="All"
+):
+
+    data = customer_segmentation(
+        region,
+        country,
+        category,
+        product,
+        year
+    )
+
+    today = datetime.today()
+
+    results = []
+
+    for customer, last_purchase, frequency, monetary in data:
+
+        days_since = (today.date() - last_purchase).days
+
+        if days_since > 90 and frequency <= 2:
+            risk = "🔴 High"
+
+        elif days_since > 45:
+            risk = "🟡 Medium"
+
+        else:
+            risk = "🟢 Low"
+
+        results.append(
+            (
+                customer,
+                last_purchase,
+                frequency,
+                monetary,
+                days_since,
+                risk
+            )
+        )
+
+    return results

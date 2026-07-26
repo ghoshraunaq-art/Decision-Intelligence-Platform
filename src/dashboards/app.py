@@ -16,6 +16,7 @@ from components.business_health import show_business_health
 from components.customer_intelligence import show_customer_intelligence
 from components.anomaly_detection import show_anomaly_detection
 from components.executive_insights import show_executive_insights
+from components.customer_churn import show_customer_churn
 
 import streamlit as st
 import pandas as pd
@@ -40,6 +41,7 @@ from analytics.sales_queries import (
     monthly_revenue,
     category_sales,
     customer_segmentation,
+    customer_churn_prediction,
 )
 
 def improve_chart_layout(fig):
@@ -422,35 +424,35 @@ Monitor revenue, customers, products, inventory and business performance through
     st.markdown("---")
 
     show_insights(
-    monthly_revenue(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
-    ),
-    category_sales(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
-    ),
-    revenue_by_region(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
-    ),
-    inventory_status(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
+        monthly_revenue(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        category_sales(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        revenue_by_region(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        inventory_status(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        )
     )
-)
 
     st.markdown("---")
 
@@ -480,6 +482,18 @@ Monitor revenue, customers, products, inventory and business performance through
 
     show_customer_segments(
         customer_segmentation(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        )
+    )
+
+    st.markdown("---")
+
+    show_customer_churn(
+        customer_churn_prediction(
             selected_region,
             selected_country,
             selected_category,
