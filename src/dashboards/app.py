@@ -42,6 +42,7 @@ from analytics.sales_queries import (
     category_sales,
     customer_segmentation,
     customer_churn_prediction,
+    product_recommendations,
 )
 
 def improve_chart_layout(fig):
@@ -555,13 +556,53 @@ Monitor revenue, customers, products, inventory and business performance through
         )
     )
 
+    st.markdown("---")
+
+    st.header("🛒 Product Recommendation Engine")
+
+    st.caption(
+        "Identifies products frequently purchased together "
+        "using historical customer transaction patterns."
+    )
+
+    recommendation_data = product_recommendations(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    )
+
+    if recommendation_data:
+
+        recommendation_df = pd.DataFrame(
+            recommendation_data,
+            columns=[
+                "Product",
+                "Recommended Product",
+                "Purchase Frequency"
+            ]
+        )
+
+        st.dataframe(
+            recommendation_df,
+            use_container_width=True,
+            hide_index=True
+        )
+
+    else:
+
+        st.info(
+            "No product recommendations available."
+        )
+
     show_recommendations(
         inventory_status(
-            selected_region,
-            selected_country,
-            selected_category,
-            selected_product,
-            selected_year
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
         )
     )
 # ===========================

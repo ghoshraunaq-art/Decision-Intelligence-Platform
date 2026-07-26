@@ -1027,3 +1027,78 @@ def customer_churn_prediction(
         )
 
     return results
+
+def product_recommendations(
+    region="All",
+    country="All",
+    category="All",
+    product="All",
+    year="All"
+):
+
+    query = """
+        SELECT
+            p1.product_name AS product_a,
+            p2.product_name AS product_b,
+            COUNT(*) AS bought_together
+
+        FROM order_items oi1
+
+        JOIN order_items oi2
+            ON oi1.order_id = oi2.order_id
+            AND oi1.product_id < oi2.product_id
+
+        JOIN products p1
+            ON oi1.product_id = p1.product_id
+
+        JOIN products p2
+            ON oi2.product_id = p2.product_id
+
+        JOIN orders o
+            ON oi1.order_id = o.order_id
+
+        JOIN customers cu
+            ON o.customer_id = cu.customer_id
+
+        JOIN regions r
+            ON cu.region_id = r.region_id
+
+        JOIN countries c
+            ON r.country_id = c.country_id
+
+        JOIN categories cat
+            ON p1.category_id = cat.category_id
+
+        WHERE 1=1
+    """
+
+    params = []
+
+    if region != "All":
+        query += " AND r.region_name=%s"
+        params.append(region)
+
+    if country != "All":
+        query += " AND c.country_name=%s"
+        params.append(country)
+
+    if category != "All":
+        query += " AND cat.category_name=%s"
+        params.append(category)
+
+    if year != "All":
+        query += " AND EXTRACT(YEAR FROM o.order_date)=%s"
+        params.append(year)
+
+    query += """
+        GROUP BY
+            p1.product_name,
+            p2.product_name
+
+        ORDER BY
+            bought_together DESC
+
+        LIMIT 10
+    """
+
+    return execute_query(query, tuple(params))
