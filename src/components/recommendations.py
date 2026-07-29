@@ -3,7 +3,7 @@ import streamlit as st
 
 def show_recommendations(inventory):
 
-    st.header("🤖 AI Business Recommendations")
+    st.header("📌 Automated Business Recommendations")
 
     low_stock = []
 
