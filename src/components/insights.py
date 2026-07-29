@@ -8,7 +8,7 @@ def show_insights(
     inventory_data
 ):
 
-    st.subheader("🧠 AI Business Insights")
+    st.subheader("📊 Automated Business Insights")
 
     insights = []
 
