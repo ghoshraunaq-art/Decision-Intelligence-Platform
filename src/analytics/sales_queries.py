@@ -1056,6 +1056,9 @@ def product_recommendations(
         JOIN products p2
             ON oi2.product_id = p2.product_id
 
+        JOIN categories cat
+            ON p1.category_id = cat.category_id
+
         JOIN orders o
             ON oi1.order_id = o.order_id
 
@@ -1067,9 +1070,6 @@ def product_recommendations(
 
         JOIN countries c
             ON r.country_id = c.country_id
-
-        JOIN categories cat
-            ON p1.category_id = cat.category_id
 
         WHERE 1=1
     """
@@ -1088,9 +1088,20 @@ def product_recommendations(
         query += " AND cat.category_name=%s"
         params.append(category)
 
+    if product != "All":
+        query += """
+            AND (
+                p1.product_name=%s
+                OR
+                p2.product_name=%s
+            )
+        """
+        params.extend([product, product])
+
     if year != "All":
         query += " AND EXTRACT(YEAR FROM o.order_date)=%s"
         params.append(year)
+
 
     query += """
         GROUP BY
