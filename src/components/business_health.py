@@ -8,7 +8,7 @@ def show_business_health(
     inventory_df
 ):
 
-    if customers == 0:
+    if orders == 0:
         aov = 0
     else:
         aov = revenue / orders
