@@ -457,7 +457,7 @@ Monitor revenue, customers, products, inventory and business performance through
 
     st.markdown("---")
 
-    show_forecast(
+    forecast_fig = show_forecast(
         monthly_revenue(
             selected_region,
             selected_country,
@@ -466,6 +466,13 @@ Monitor revenue, customers, products, inventory and business performance through
             selected_year
         )
     )
+
+    if forecast_fig:
+        st.subheader("📈 Revenue Trend Forecast")
+        st.plotly_chart(
+            forecast_fig,
+            use_container_width=True
+        )
 
     st.markdown("---")
 
