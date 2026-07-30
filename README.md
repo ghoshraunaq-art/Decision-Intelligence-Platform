@@ -1,306 +1,237 @@
-![Python](https://img.shields.io/badge/Python-3.x-blue)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
-![Streamlit](https://img.shields.io/badge/Streamlit-Deployed-red)
-![License](https://img.shields.io/badge/License-MIT-green)
-
-# Python PostgreSQL Streamlit Plotly
-
 # 📊 Decision Intelligence Platform
 
-An interactive **Business Intelligence and Analytics Dashboard** built using **Python, PostgreSQL, Streamlit and Plotly**.
+![Python](https://img.shields.io/badge/Python-3.13-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791)
+![Supabase](https://img.shields.io/badge/Supabase-Cloud-3ECF8E)
+![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B)
+![Plotly](https://img.shields.io/badge/Plotly-Visualization-6A5ACD)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-The platform analyzes retail sales data and provides actionable business insights through interactive dashboards, KPIs, analytics modules, inventory monitoring, customer intelligence and recommendation systems.
+An interactive **Business Intelligence Dashboard** built using **Python, PostgreSQL, Supabase, Streamlit, Plotly, and Pandas**.
+
+The platform transforms retail sales data into actionable business intelligence through interactive dashboards, analytics, forecasting, customer intelligence, inventory monitoring, and automated recommendations.
 
 ---
 
 # 🎯 Project Objective
 
-The **Decision Intelligence Platform** is designed to help businesses analyze retail transaction data and make data-driven decisions.
+The Decision Intelligence Platform enables organizations to monitor business performance and make data-driven decisions through an integrated analytics dashboard.
 
-The system integrates:
+The application combines:
 
-- Sales analytics
-- Customer behaviour analysis
-- Product performance monitoring
-- Inventory intelligence
-- Revenue trend analysis
-- Business recommendations
+- PostgreSQL Relational Database
+- Supabase Cloud Database
+- Streamlit Web Application
+- Plotly Interactive Visualizations
+- Python Analytics Modules
 
-The platform uses a normalized PostgreSQL database with Streamlit-based interactive visualization to deliver an end-to-end business analytics solution.
+to deliver real-time executive insights.
 
 ---
 
 # 🚀 Features
 
-## 📊 Executive Dashboard
+### 📌 Executive Dashboard
 
-- Executive KPI Dashboard
-- Total Revenue Analysis
-- Products Sold Tracking
-- Customer and Order Metrics
-- Revenue by Category
-- Revenue by Region
-- Interactive Filters:
-  - Country
-  - Region
-  - Category
-  - Product
-  - Year
-- Top Selling Products
-- Top Customers
-- Monthly Revenue Trends
-- Sales Distribution Analysis
+- Executive KPI Cards
+- Executive Summary
+- Revenue Analysis
+- Inventory Status
+- Business Insights
 
+### 📊 Advanced Analytics
 
----
-
-# 📈 Advanced Analytics
-
-## Revenue Intelligence
-
-- Monthly Revenue Analysis
-- Revenue Trend Forecast Visualization
+- Product Performance Analysis
+- Customer Performance Analysis
+- Monthly Revenue Trend
+- Revenue Forecasting
 - Revenue Anomaly Detection
-
-
-## Customer Intelligence
-
 - Customer Segmentation
-- Customer Purchase Behaviour Analysis
-- Customer Churn Risk Analysis
-- Highest Value Customer Identification
-
-
-## Inventory Intelligence
-
-- Inventory Monitoring
-- Low Stock Detection
-- Inventory Risk Analysis
-
-
-## Business Intelligence
-
+- Customer Churn Prediction
+- Customer Revenue Intelligence
 - Business Health Score
-- Automated Business Insights
-- Strategic Recommendations
+- Sales Distribution
+- Product Recommendation Engine
+- Automated Business Recommendations
 
----
+### 🎛 Interactive Filtering
 
-# 🛒 Recommendation System
-
-## Product Recommendation Engine
-
-The system identifies products frequently purchased together by analyzing historical customer transaction patterns.
-
-The recommendation module helps businesses:
-
-- Understand product relationships
-- Improve cross-selling opportunities
-- Design better product bundles
-
-
-## Inventory-Based Recommendations
-
-Generates recommendations based on:
-
-- Low inventory products
-- Stock risk conditions
-- Product demand patterns
+- Country
+- Region
+- Category
+- Product
+- Year
 
 ---
 
 # 🌐 Live Demo
 
-Streamlit Cloud Deployment:
-
 https://decision-intelligence-platform-cw5a5vt8dvjnyyzukqmeor.streamlit.app/
 
 ---
 
-# 🛠 Tech Stack
+# 📸 Dashboard Preview
 
-## Programming Language
+## Executive Dashboard
 
-- Python
+### Executive Overview
 
+![Executive Overview](screenshots/dashboard_executive_overview.png)
 
-## Database
+### Executive Summary
 
-- PostgreSQL
-- Supabase
+![Executive Summary](screenshots/dashboard_executive_summary.png)
 
+### Revenue Analysis
 
-## Data Processing
+![Revenue Analysis](screenshots/dashboard_revenue_analysis.png)
 
-- Pandas
-- Faker
+### Inventory Status
 
+![Inventory Status](screenshots/dashboard_inventory_status.png)
 
-## Visualization
+### Business Insights
 
-- Streamlit
-- Plotly
-
-
-## Query Language
-
-- SQL
+![Business Insights](screenshots/dashboard_business_insights.png)
 
 ---
 
-# ☁️ Deployment Architecture
+## Analytics Dashboard
 
-| Component | Technology |
-|-|-|
-| Frontend Dashboard | Streamlit Cloud |
-| Database | PostgreSQL (Supabase) |
-| Visualization | Plotly |
-| Data Processing | Python + Pandas |
-| Backend Queries | SQL |
+### Product & Customer Analysis
 
----
+![Product Customer Analysis](screenshots/analytics_product_customer_analysis.png)
 
-# 🗄 Database Design
+### Top Selling Products
 
-The project uses a normalized relational PostgreSQL database.
+![Top Selling Products](screenshots/analytics_top_selling_products.png)
 
-## Main Tables
+### Top Customers
 
-- Customers
-- Countries
-- Regions
-- Categories
-- Brands
-- Products
-- Inventory
-- Orders
-- Order Items
-- Sales
+![Top Customers](screenshots/analytics_top_customers.png)
 
+### Monthly Revenue Trend
 
-The database follows relational database principles with foreign key relationships to maintain data consistency.
+![Monthly Revenue](screenshots/analytics_monthly_revenue_trend.png)
 
-## Database Architecture
+### Revenue Forecast
 
-The system follows an analytical database structure:
+![Revenue Forecast](screenshots/analytics_revenue_forecast.png)
 
-### Fact Table
+### Revenue Anomaly Detection
 
-- Sales
+![Revenue Anomaly](screenshots/analytics_revenue_anomaly.png)
 
-### Dimension Tables
+### Sales Distribution
 
-- Customers
-- Products
-- Categories
-- Brands
-- Regions
-- Countries
+![Sales Distribution](screenshots/analytics_sales_category_distribution.png)
 
-This structure allows efficient analytical queries and dashboard reporting.
+### Customer Segmentation
 
----
+![Customer Segmentation](screenshots/analytics_customer_segmentation.png)
 
-# 📈 Dashboard Modules
+### Customer Churn Prediction
 
-## Dashboard
+![Customer Churn](screenshots/analytics_customer_churn_prediction.png)
 
-Includes:
+### Customer Revenue Distribution
 
-- Revenue KPIs
-- Executive Summary
-- Revenue Category Analysis
-- Regional Performance Analysis
-- Product Performance
-- Customer Performance
-- Inventory Status
-- Monthly Revenue Analysis
-- Sales Distribution
-- Revenue Forecast
-- Revenue Anomaly Detection
-- Customer Intelligence
-- Business Health Score
-- Product Recommendation Engine
+![Customer Revenue](screenshots/analytics_customer_revenue_distribution.png)
 
+### Business Health & Customer Intelligence
+
+![Business Health](screenshots/analytics_business_health_customer_intelligence.png)
+
+### Product Recommendation Engine
+
+![Recommendation Engine](screenshots/analytics_product_recommendation_engine.png)
+
+### Automated Business Recommendations
+
+![Business Recommendations](screenshots/analytics_automated_business_recommendations.png)
 
 ---
 
-## Analytics
+# 🗄 Database Architecture
 
-Includes:
+### Supabase Database
 
-- Product Analysis
-- Customer Segmentation
-- Customer Churn Risk Analysis
-- Inventory Analysis
-- Revenue Analysis
+![Supabase](screenshots/analytics_supabase_database.png)
 
+### Database Schema
+
+![Database Schema](screenshots/analytics_supabase_schema.png)
+
+### PostgreSQL Query Analysis
+
+![PostgreSQL](screenshots/analytics_postgresql_query_analysis.png)
 
 ---
 
-## Recommendations
+# 💻 Project Architecture
 
-Provides:
+### VS Code Project Structure
 
-- Product purchase pattern recommendations
-- Inventory-based business suggestions
-- Low stock alerts
+![VS Code](screenshots/analytics_vscode_project_structure.png)
+
+---
+
+# 🛠 Technology Stack
+
+| Technology | Purpose |
+|------------|----------|
+| Python | Backend Development |
+| PostgreSQL | Relational Database |
+| Supabase | Cloud Database |
+| Streamlit | Interactive Dashboard |
+| Plotly | Data Visualization |
+| Pandas | Data Analysis |
+| SQL | Query Processing |
+| Faker | Synthetic Data Generation |
 
 ---
 
 # 📂 Project Structure
 
 ```
-Decision_Intelligence_Platform/
-
+Decision_Intelligence_Platform
 │
-├── src/
-│
-│   ├── analytics/
-│   │
-│   ├── components/
-│   │
-│   ├── dashboards/
-│   │
-│   ├── database/
-│   │
-│   ├── insert_data/
+├── data
+├── docs
+├── notebooks
+├── reports
+├── screenshots
+├── sql
+├── src
+│   ├── analytics
+│   ├── components
+│   ├── dashboards
+│   ├── database
+│   ├── generators
+│   └── utils
 │
 ├── requirements.txt
-│
-└── README.md
+├── README.md
+└── LICENSE
 ```
 
 ---
 
-# 📷 Project Screenshots
+# ▶ Installation
 
-The repository contains screenshots demonstrating:
-
-- Executive Dashboard
-- Analytics Modules
-- Recommendation Engine
-- PostgreSQL Database Schema
-- Supabase Database Deployment
-- Streamlit Cloud Deployment
-
----
-
-# ▶️ Installation
-
-## Clone Repository
+Clone the repository
 
 ```bash
 git clone https://github.com/ghoshraunaq-art/Decision-Intelligence-Platform.git
 ```
 
-## Install Dependencies
+Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Run Dashboard
+Run the dashboard
 
 ```bash
 python -m streamlit run src/dashboards/app.py
@@ -308,19 +239,17 @@ python -m streamlit run src/dashboards/app.py
 
 ---
 
-# 📌 Future Improvements
+# 📈 Future Improvements
 
-Future enhancements include:
-
-- Machine Learning based demand forecasting
-- Advanced RFM customer analytics
-- Profit and margin analysis
-- Automated PDF/Excel dashboard reports
-- User authentication system
-- Role-based dashboard access
-- Real-time sales data integration
-- Automated email/SMS business alerts
-- Advanced predictive analytics models
+- Machine Learning Sales Forecasting
+- Customer Lifetime Value Prediction
+- Advanced RFM Segmentation
+- Profit & Margin Analysis
+- Export Reports (PDF / Excel)
+- Authentication System
+- Role-Based Access Control
+- Real-Time Data Integration
+- AI-Powered Decision Intelligence
 
 ---
 
@@ -328,12 +257,16 @@ Future enhancements include:
 
 **Raunaq Ghosh**
 
-B.Tech Computer Science & Engineering  
-Kalinga Institute of Industrial Technology (KIIT)  
+B.Tech Computer Science & Engineering
+
+Kalinga Institute of Industrial Technology (KIIT)
+
 Bhubaneswar, Odisha, India
 
-
 GitHub:
-
 https://github.com/ghoshraunaq-art
+
+---
+
+⭐ If you found this project useful, consider giving it a star.
 
