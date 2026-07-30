@@ -7,7 +7,7 @@
 ![Plotly](https://img.shields.io/badge/Plotly-Visualization-6A5ACD)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-An interactive **Business Intelligence Dashboard** built using **Python, PostgreSQL, Supabase, Streamlit, Plotly, and Pandas**.
+An interactive **Decision Intelligence Platform for Retail Sales Analytics** built using **Python, PostgreSQL, Supabase, Streamlit, Plotly, and Pandas**.
 
 The platform transforms retail sales data into actionable business intelligence through interactive dashboards, analytics, forecasting, customer intelligence, inventory monitoring, and automated recommendations.
 
