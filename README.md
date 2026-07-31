@@ -263,9 +263,6 @@ Kalinga Institute of Industrial Technology (KIIT)
 
 Bhubaneswar, Odisha, India
 
-GitHub:
-https://github.com/ghoshraunaq-art
-
 ---
 
 ⭐ If you found this project useful, consider giving it a star.
