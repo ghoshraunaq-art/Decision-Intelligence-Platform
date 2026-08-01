@@ -886,9 +886,11 @@ elif page == "📈 Analytics":
 # RECOMMENDATIONS
 # ===========================
 
-elif page == "🤖 Recommendations":
+elif page == "💡 Recommendations":
 
-    st.title("🤖 Business Recommendations")
+    st.write("DEBUG: Recommendations page loaded")
+
+    st.title("💡 Business Recommendations")
 
     st.divider()
 
