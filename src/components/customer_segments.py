@@ -45,9 +45,12 @@ def show_customer_segments(data):
         hide_index=True
     )
 
+    segment_order = ["Low Value", "Regular", "VIP"]
+
     segment_count = (
         df["Segment"]
         .value_counts()
+        .reindex(segment_order, fill_value=0)
         .reset_index()
     )
 
@@ -61,12 +64,13 @@ def show_customer_segments(data):
         x="Segment",
         y="Customers",
         color="Segment",
+        category_orders={"Segment": segment_order},
         title="Customer Segmentation"
     )
 
     fig.update_xaxes(
-    tickangle=-45,
-    dtick=2
+        tickangle=-45,
+        automargin=True
     )
 
     fig.update_layout(
@@ -77,5 +81,5 @@ def show_customer_segments(data):
 
     st.plotly_chart(
         fig,
-        use_container_width=True
+        width="stretch"
     )

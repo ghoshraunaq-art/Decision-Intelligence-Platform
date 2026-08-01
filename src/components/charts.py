@@ -28,7 +28,15 @@ def show_revenue_category_chart(data):
         showlegend=False,
         yaxis_title="Category",
         xaxis_title="Revenue",
-        margin=dict(l=20, r=20, t=60, b=20)
+        margin=dict(l=20, r=20, t=60, b=40)
+    )
+
+    # Fix overlapping/garbled x-axis tick labels
+    fig.update_xaxes(
+        nticks=6,
+        tickangle=0,
+        tickformat=",.0f",
+        automargin=True
     )
 
     st.plotly_chart(

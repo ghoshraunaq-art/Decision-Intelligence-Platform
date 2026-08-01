@@ -45,20 +45,40 @@ from analytics.sales_queries import (
     product_recommendations,
 )
 
+def improve_chart_layout(fig):
+
+    fig.update_layout(
+        margin=dict(
+            b=120
+        ),
+        height=500
+    )
+
+    fig.update_xaxes(
+        tickangle=0,
+        automargin=True,
+        tickmode="linear",
+        tickfont=dict(
+            size=11
+        )
+    )
+
+    return fig
+
 st.set_page_config(
     page_title="Decision Intelligence Platform",
     page_icon="📊",
     layout="wide"
 )
 
-st.sidebar.title("🧠 Decision Intelligence")
+st.sidebar.title("📊 Decision Intelligence")
 
 page = st.sidebar.radio(
     "📂 Navigation",
     [
-        "🏠 Dashboard",
-        "📈 Analytics",
-        "💡 Recommendations"
+        "Dashboard",
+        "Analytics",
+        "Recommendations"
     ]
 )
 
@@ -66,10 +86,10 @@ page = st.sidebar.radio(
 # DASHBOARD
 # ===========================
 
-if page == "🏠 Dashboard":
+if page == "Dashboard":
 
     st.sidebar.markdown("---")
-    st.sidebar.markdown("## 🎯 Filters")
+    st.sidebar.subheader("Filters")
 
     # Country
     country_options = ["All"] + [
@@ -136,7 +156,7 @@ if page == "🏠 Dashboard":
     
     st.title("📊 Decision Intelligence Platform")
 
-    st.subheader("Interactive Decision Intelligence Dashboard")
+    st.subheader("Interactive Business Intelligence Dashboard")
 
     st.markdown(
     """
@@ -145,12 +165,12 @@ if page == "🏠 Dashboard":
 
     - 🐍 Python
     - 🐘 PostgreSQL
-    - ⚡ Streamlit
-    - 📊 Plotly
+    - 📊 Streamlit
+    - 📈 Plotly
     """
     )
 
-    st.divider()
+    st.markdown("---")
 
     show_kpi_cards(
         total_revenue(
@@ -182,7 +202,7 @@ if page == "🏠 Dashboard":
             selected_year
         )
     )
-    st.divider()
+    st.markdown("---")
 
     st.subheader("📌 Executive Summary")
 
@@ -192,9 +212,9 @@ if page == "🏠 Dashboard":
         st.info("""
 ### Business Performance
 
-• Revenue analysis across products and regions
+• Revenue generated from transactional sales
 
-• Inventory monitoring
+• Real-time inventory monitoring
 
 • Customer purchase behaviour analysis
 
@@ -214,7 +234,7 @@ if page == "🏠 Dashboard":
 • Monitor inventory before stock-outs
 """)
 
-    st.divider()
+    st.markdown("---")
 
     left, right = st.columns(2)
 
@@ -240,7 +260,7 @@ if page == "🏠 Dashboard":
             )
         )
 
-    st.divider()
+    st.markdown("---")
 
     st.header("📊 Advanced Analytics")
 
@@ -268,22 +288,19 @@ if page == "🏠 Dashboard":
     fig_products.update_layout(
         template="plotly_dark",
         height=500,
+        xaxis=dict(
+            dtick=5,
+            tickfont=dict(size=12)
+        ),
         yaxis=dict(
             tickfont=dict(size=13)
         )
     )
 
-    fig_products.update_xaxes(
-        nticks=6,
-        tickformat=",.0f",
-        tickfont=dict(size=12),
-        automargin=True
-    )
-
     with left:
         st.plotly_chart(
             fig_products,
-            width="stretch"
+            use_container_width=True
         )
 
     customers_df = pd.DataFrame(
@@ -320,10 +337,10 @@ if page == "🏠 Dashboard":
     with right:
         st.plotly_chart(
             fig_customers,
-            width="stretch"
+            use_container_width=True
         )
 
-    st.divider()
+    st.markdown("---")
 
     st.header("📦 Inventory Status")
 
@@ -340,10 +357,10 @@ if page == "🏠 Dashboard":
 
     st.dataframe(
         inventory_df,
-        width="stretch"
+        use_container_width=True
     )
 
-    st.divider()
+    st.markdown("---")
 
     left, right = st.columns(2)
 
@@ -383,7 +400,7 @@ if page == "🏠 Dashboard":
     with left:
         st.plotly_chart(
             fig_month,
-            width="stretch"
+            use_container_width=True
         )
 
     category_sales_df = pd.DataFrame(
@@ -407,10 +424,10 @@ if page == "🏠 Dashboard":
     with right:
         st.plotly_chart(
             fig_sales,
-            width="stretch"
+            use_container_width=True
         )
 
-    st.divider()
+    st.markdown("---")
 
     show_insights(
         monthly_revenue(
@@ -443,7 +460,7 @@ if page == "🏠 Dashboard":
         )
     )
 
-    st.divider()
+    st.markdown("---")
 
     forecast_fig = show_forecast(
         monthly_revenue(
@@ -459,10 +476,10 @@ if page == "🏠 Dashboard":
         st.subheader("📈 Revenue Trend Forecast")
         st.plotly_chart(
             forecast_fig,
-            width="stretch"
+            use_container_width=True
         )
 
-    st.divider()
+    st.markdown("---")
 
     show_anomaly_detection(
         monthly_revenue(
@@ -474,7 +491,7 @@ if page == "🏠 Dashboard":
         )
     )
 
-    st.divider()
+    st.markdown("---")
 
     show_customer_segments(
         customer_segmentation(
@@ -486,7 +503,7 @@ if page == "🏠 Dashboard":
         )
     )
 
-    st.divider()
+    st.markdown("---")
 
     show_customer_churn(
         customer_churn_prediction(
@@ -498,7 +515,7 @@ if page == "🏠 Dashboard":
         )
     )
 
-    st.divider()
+    st.markdown("---")
 
 
     inventory_for_health = pd.DataFrame(
@@ -538,7 +555,7 @@ if page == "🏠 Dashboard":
         inventory_for_health
     )
 
-    st.divider()
+    st.markdown("---")
 
 
     show_customer_intelligence(
@@ -551,7 +568,7 @@ if page == "🏠 Dashboard":
         )
     )
 
-    st.divider()
+    st.markdown("---")
 
     st.header("🛒 Product Recommendation Engine")
 
@@ -581,7 +598,7 @@ if page == "🏠 Dashboard":
 
         st.dataframe(
             recommendation_df,
-            width="stretch",
+            use_container_width=True,
             hide_index=True
         )
 
@@ -604,10 +621,10 @@ if page == "🏠 Dashboard":
 # ANALYTICS
 # ===========================
 
-elif page == "📈 Analytics":
+elif page == "Analytics":
 
     st.sidebar.markdown("---")
-    st.sidebar.markdown("## 🎯 Filters")
+    st.sidebar.subheader("Analytics Filters")
 
     country_options = ["All"] + [
         row[0] for row in available_countries()
@@ -673,7 +690,7 @@ elif page == "📈 Analytics":
 
     st.title("📈 Analytics")
 
-    st.divider()
+    st.markdown("---")
 
     products_df = pd.DataFrame(
         top_products(
@@ -746,7 +763,7 @@ elif page == "📈 Analytics":
 
     st.dataframe(
         products_df,
-        width="stretch",
+        use_container_width=True,
         hide_index=True
     )
 
@@ -757,7 +774,7 @@ elif page == "📈 Analytics":
         "text/csv"
     )
 
-    st.divider()
+    st.markdown("---")
 
     st.subheader("👑 Top Customers")
 
@@ -788,7 +805,7 @@ elif page == "📈 Analytics":
         "text/csv"
     )
 
-    st.divider()
+    st.markdown("---")
 
     st.subheader("📦 Inventory Status")
 
@@ -797,7 +814,7 @@ elif page == "📈 Analytics":
             subset=["Stock"],
             cmap="RdYlGn"
         ),
-    width="stretch"
+    use_container_width=True
     )
 
     st.download_button(
@@ -807,7 +824,7 @@ elif page == "📈 Analytics":
     "text/csv"
     )
 
-    st.divider()
+    st.markdown("---")
 
     monthly_df = pd.DataFrame(
         monthly_revenue(
@@ -832,10 +849,10 @@ elif page == "📈 Analytics":
 
     st.plotly_chart(
         fig_month,
-        width="stretch"
+        use_container_width=True
     )
 
-    st.divider()
+    st.markdown("---")
 
     category_sales_df = pd.DataFrame(
         category_sales(
@@ -859,10 +876,10 @@ elif page == "📈 Analytics":
 
     st.plotly_chart(
         fig_sales,
-        width="stretch"
+        use_container_width=True
     )
      
-    st.divider()
+    st.markdown("---")
 
     st.subheader("🔮 Revenue Forecast")
 
@@ -879,18 +896,18 @@ elif page == "📈 Analytics":
     if forecast_fig:
         st.plotly_chart(
             forecast_fig,
-            width="stretch"
+            use_container_width=True
         )
 
 # ===========================
 # RECOMMENDATIONS
 # ===========================
 
-elif page == "🤖 Recommendations":
+elif page == "Recommendations":
 
     st.title("🤖 Business Recommendations")
 
-    st.divider()
+    st.markdown("---")
 
     inventory = inventory_status()
 
@@ -898,7 +915,7 @@ elif page == "🤖 Recommendations":
         inventory
     )
 
-    st.divider()
+    st.markdown("---")
 
     if total_revenue() > 5000000:
         st.success("✅ Revenue is performing very well.")
@@ -928,19 +945,12 @@ elif page == "🤖 Recommendations":
         st.success("✅ No products are running low on stock.")
 
 
-st.divider()
+st.markdown("---")
 
-st.markdown(
-    """
-    <div style='text-align:center;'>
+st.caption("""
+Decision Intelligence Platform
 
-    **Decision Intelligence Platform**
+Developed using Python, PostgreSQL, Streamlit and Plotly
 
-    Powered by Python • PostgreSQL • Streamlit • Plotly
-
-    © 2026 Raunaq Ghosh
-
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+© 2026 Raunaq Ghosh
+""")
