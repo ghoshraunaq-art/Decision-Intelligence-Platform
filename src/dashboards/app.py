@@ -888,8 +888,6 @@ elif page == "📈 Analytics":
 
 elif page == "💡 Recommendations":
 
-    st.write("DEBUG: Recommendations page loaded")
-
     st.title("💡 Business Recommendations")
 
     st.divider()
