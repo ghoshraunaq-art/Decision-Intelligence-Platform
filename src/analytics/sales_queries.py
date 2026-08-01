@@ -80,6 +80,9 @@ def total_revenue(region="All",
         query += " AND EXTRACT(YEAR FROM o.order_date) = %s"
         params.append(year)
 
+    print(query)
+    print(params)
+
     return execute_query(query, tuple(params))[0][0]
 
 def total_products_sold(region="All",
