@@ -550,56 +550,27 @@ def inventory_status(
         JOIN categories cat
             ON p.category_id = cat.category_id
 
-        LEFT JOIN order_items oi
-            ON p.product_id = oi.product_id
-
-        LEFT JOIN orders o
-            ON oi.order_id = o.order_id
-
-        LEFT JOIN customers cu
-            ON o.customer_id = cu.customer_id
-
-        LEFT JOIN regions r
-            ON cu.region_id = r.region_id
-
-        LEFT JOIN countries c
-            ON r.country_id = c.country_id
-
         WHERE 1=1
     """
 
     params = []
 
-    if region != "All":
-        query += " AND r.region_name=%s"
-        params.append(region)
-
-    if country != "All":
-        query += " AND c.country_name=%s"
-        params.append(country)
 
     if category != "All":
         query += " AND cat.category_name=%s"
         params.append(category)
 
+
     if product != "All":
         query += " AND p.product_name=%s"
         params.append(product)
 
-    if year != "All":
-        query += " AND EXTRACT(YEAR FROM o.order_date)=%s"
-        params.append(year)
 
     query += """
-        GROUP BY
-            p.product_name,
-            i.stock_quantity
-
-        ORDER BY
-            i.stock_quantity ASC
-
+        ORDER BY i.stock_quantity ASC
         LIMIT 10
     """
+
 
     return execute_query(query, tuple(params))
 
