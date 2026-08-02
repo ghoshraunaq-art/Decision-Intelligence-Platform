@@ -51,6 +51,15 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown("""
+<style>
+ul[data-baseweb="menu"] {
+    max-height: 250px !important;
+    overflow-y: auto !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 st.sidebar.title("🧠 Decision Intelligence")
 
 page = st.sidebar.radio(
