@@ -63,6 +63,13 @@ ul[role="listbox"] {
     max-height: 320px !important;
     overflow-y: auto !important;
 }
+
+/* Add real scroll room below the sidebar's last filter so opening a
+   dropdown near the bottom always has space to expand into, and you
+   can scroll further down to reach every option manually */
+section[data-testid="stSidebar"] > div:first-child {
+    padding-bottom: 350px !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
