@@ -1012,78 +1012,88 @@ def product_recommendations(
 ):
 
     query = """
-        SELECT
-            p1.product_name AS product_a,
-            p2.product_name AS product_b,
-            COUNT(*) AS bought_together
-
-        FROM order_items oi1
-
-        JOIN order_items oi2
-            ON oi1.order_id = oi2.order_id
-            AND oi1.product_id < oi2.product_id
-
-        JOIN products p1
-            ON oi1.product_id = p1.product_id
-
-        JOIN products p2
-            ON oi2.product_id = p2.product_id
-
-        JOIN categories cat
-            ON p1.category_id = cat.category_id
-
-        JOIN orders o
-            ON oi1.order_id = o.order_id
-
-        JOIN customers cu
-            ON o.customer_id = cu.customer_id
-
-        JOIN regions r
-            ON cu.region_id = r.region_id
-
-        JOIN countries c
-            ON r.country_id = c.country_id
-
-        WHERE 1=1
+        WITH filtered_orders AS (
+            SELECT o.order_id
+            FROM orders o
+            JOIN customers cu ON o.customer_id = cu.customer_id
+            JOIN regions r ON cu.region_id = r.region_id
+            JOIN countries c ON r.country_id = c.country_id
+            WHERE 1=1
     """
 
     params = []
 
     if region != "All":
-        query += " AND r.region_name=%s"
+        query += " AND r.region_name = %s"
         params.append(region)
 
     if country != "All":
-        query += " AND c.country_name=%s"
+        query += " AND c.country_name = %s"
         params.append(country)
 
+    if year != "All":
+        query += " AND EXTRACT(YEAR FROM o.order_date) = %s"
+        params.append(year)
+
+    query += """
+        ),
+        total_orders AS (
+            SELECT COUNT(*)::numeric AS n FROM filtered_orders
+        ),
+        product_order_counts AS (
+            SELECT oi.product_id, COUNT(DISTINCT oi.order_id) AS order_count
+            FROM order_items oi
+            JOIN filtered_orders fo ON oi.order_id = fo.order_id
+            GROUP BY oi.product_id
+        ),
+        pair_counts AS (
+            SELECT
+                oi1.product_id AS product_a_id,
+                oi2.product_id AS product_b_id,
+                COUNT(DISTINCT oi1.order_id) AS bought_together
+            FROM order_items oi1
+            JOIN order_items oi2
+                ON oi1.order_id = oi2.order_id
+                AND oi1.product_id < oi2.product_id
+            JOIN filtered_orders fo ON oi1.order_id = fo.order_id
+            GROUP BY oi1.product_id, oi2.product_id
+        )
+        SELECT
+            p1.product_name AS product_a,
+            p2.product_name AS product_b,
+            pc.bought_together
+        FROM pair_counts pc
+        JOIN products p1 ON pc.product_a_id = p1.product_id
+        JOIN products p2 ON pc.product_b_id = p2.product_id
+        JOIN product_order_counts poc1 ON pc.product_a_id = poc1.product_id
+        JOIN product_order_counts poc2 ON pc.product_b_id = poc2.product_id
+        CROSS JOIN total_orders t
+        JOIN categories cat ON p1.category_id = cat.category_id
+        WHERE pc.bought_together >= 5
+    """
+
     if category != "All":
-        query += " AND cat.category_name=%s"
+        query += " AND cat.category_name = %s"
         params.append(category)
 
     if product != "All":
         query += """
             AND (
-                p1.product_name=%s
+                p1.product_name = %s
                 OR
-                p2.product_name=%s
+                p2.product_name = %s
             )
         """
         params.extend([product, product])
 
-    if year != "All":
-        query += " AND EXTRACT(YEAR FROM o.order_date)=%s"
-        params.append(year)
-
-
     query += """
-        GROUP BY
-            p1.product_name,
-            p2.product_name
-
         ORDER BY
-            bought_together DESC
-
+            ROUND(
+                (pc.bought_together * t.n) /
+                NULLIF(poc1.order_count * poc2.order_count, 0),
+                2
+            ) DESC NULLS LAST,
+            pc.bought_together DESC
         LIMIT 10
     """
 
