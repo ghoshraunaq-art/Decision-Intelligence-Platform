@@ -828,18 +828,18 @@ def available_products(region="All", country="All", category="All"):
     query = """
         SELECT DISTINCT
             p.product_name
-        FROM order_items oi
-        JOIN products p
-            ON oi.product_id = p.product_id
+        FROM products p
         JOIN categories cat
             ON p.category_id = cat.category_id
-        JOIN orders o
+        LEFT JOIN order_items oi
+            ON p.product_id = oi.product_id
+        LEFT JOIN orders o
             ON oi.order_id = o.order_id
-        JOIN customers cu
+        LEFT JOIN customers cu
             ON o.customer_id = cu.customer_id
-        JOIN regions r
+        LEFT JOIN regions r
             ON cu.region_id = r.region_id
-        JOIN countries c
+        LEFT JOIN countries c
             ON r.country_id = c.country_id
         WHERE 1=1
     """
@@ -861,7 +861,6 @@ def available_products(region="All", country="All", category="All"):
     query += " ORDER BY p.product_name"
 
     return execute_query(query, tuple(params))
-
 
 def available_years(region="All",
                     country="All",
