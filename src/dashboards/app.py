@@ -53,8 +53,22 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-ul[data-baseweb="menu"] {
-    max-height: 250px !important;
+/* Stop the sidebar from clipping dropdown menus that overflow it */
+section[data-testid="stSidebar"] {
+    overflow: visible !important;
+}
+section[data-testid="stSidebar"] > div {
+    overflow: visible !important;
+}
+
+/* Keep the dropdown above everything else */
+div[data-baseweb="popover"] {
+    z-index: 9999 !important;
+}
+
+/* Cap the list height and make it properly scrollable */
+ul[role="listbox"] {
+    max-height: 260px !important;
     overflow-y: auto !important;
 }
 </style>
