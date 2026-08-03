@@ -630,15 +630,6 @@ if page == "🏠 Dashboard":
             "No product recommendations available."
         )
 
-    show_recommendations(
-        inventory_status(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product,
-        selected_year
-        )
-    )
 # ===========================
 # ANALYTICS
 # ===========================
