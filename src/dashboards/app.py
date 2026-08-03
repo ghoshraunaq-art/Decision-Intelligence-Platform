@@ -211,7 +211,7 @@ if page == "🏠 Dashboard":
             selected_category,
             selected_product,
             selected_year
-        )
+        ),
         top_category_data[0],
         top_category_data[1]
     )
@@ -469,6 +469,13 @@ if page == "🏠 Dashboard":
             selected_year
         ),
         inventory_status(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        top_category_by_revenue(
             selected_region,
             selected_country,
             selected_category,

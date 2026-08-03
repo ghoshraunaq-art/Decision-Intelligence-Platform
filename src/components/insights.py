@@ -5,7 +5,8 @@ def show_insights(
     revenue_data,
     category_data,
     region_data,
-    inventory_data
+    inventory_data,
+    revenue_category_data
 ):
 
     st.subheader("📊 Automated Business Insights")
@@ -30,7 +31,13 @@ def show_insights(
         )
 
         insights.append(
-            f"🏆 Best performing category: {best_category[0]}"
+            f"📦 Top category by sales volume: {best_category[0]}"
+        )
+
+
+    if revenue_category_data:
+        insights.append(
+            f"💰 Top category by revenue: {revenue_category_data[0]}"
         )
 
 
