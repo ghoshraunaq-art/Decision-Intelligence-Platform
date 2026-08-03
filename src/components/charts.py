@@ -10,8 +10,10 @@ def show_revenue_category_chart(data):
         columns=["Category", "Revenue"]
     )
 
-    # Sort categories by revenue
-    df = df.sort_values("Revenue", ascending=True)
+    df = df.sort_values(
+        "Revenue",
+        ascending=True
+    )
 
     fig = px.bar(
         df,
@@ -28,10 +30,14 @@ def show_revenue_category_chart(data):
         showlegend=False,
         yaxis_title="Category",
         xaxis_title="Revenue",
-        margin=dict(l=20, r=20, t=60, b=40)
+        margin=dict(
+            l=20,
+            r=20,
+            t=60,
+            b=40
+        )
     )
 
-    # Fix overlapping/garbled x-axis tick labels
     fig.update_xaxes(
         nticks=6,
         tickangle=0,
@@ -53,22 +59,56 @@ def show_region_chart(data):
         columns=["Region", "Revenue"]
     )
 
-    fig = px.pie(
-        df,
-        names="Region",
-        values="Revenue",
-        title="Revenue Contribution by Region",
-        hole=0.35
+    # Top 10 Highest Revenue Regions
+    df = (
+        df.sort_values(
+            by="Revenue",
+            ascending=False
+        )
+        .head(10)
+        .reset_index(drop=True)
     )
 
+    fig = px.bar(
+        df,
+        x="Revenue",
+        y="Region",
+        orientation="h",
+        color="Region",
+        color_discrete_sequence=px.colors.qualitative.Vivid,
+        title="Top Revenue Generating Regions"
+    )
+
+    # Remove labels completely
     fig.update_traces(
-        textposition="inside",
-        textinfo="percent"
+        text=None,
+        hovertemplate="<b>%{y}</b><br>Revenue: ₹ %{x:,.2f}<extra></extra>"
     )
 
     fig.update_layout(
+        template="plotly_dark",
         height=500,
-        margin=dict(l=20, r=20, t=60, b=20)
+        showlegend=False,
+        margin=dict(
+            l=20,
+            r=20,
+            t=60,
+            b=20
+        ),
+        yaxis_title="Region",
+        xaxis_title="Revenue"
+    )
+
+    # Highest revenue at TOP
+    fig.update_yaxes(
+        autorange="reversed"
+    )
+
+    # Cleaner x-axis
+    fig.update_xaxes(
+        tickformat=",.0f",
+        nticks=6,
+        automargin=True
     )
 
     st.plotly_chart(
