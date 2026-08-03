@@ -714,6 +714,82 @@ def category_sales(region="All",
 
     return execute_query(query, tuple(params))
 
+def top_category_by_revenue(
+    region="All",
+    country="All",
+    category="All",
+    product="All",
+    year="All"
+):
+
+    query = """
+        SELECT
+            cat.category_name,
+            SUM(s.quantity_sold * s.selling_price) AS revenue
+
+        FROM sales s
+
+        JOIN order_items oi
+            ON s.order_item_id = oi.order_item_id
+
+        JOIN orders o
+            ON oi.order_id = o.order_id
+
+        JOIN customers cu
+            ON o.customer_id = cu.customer_id
+
+        JOIN regions r
+            ON cu.region_id = r.region_id
+
+        JOIN countries c
+            ON r.country_id = c.country_id
+
+        JOIN products p
+            ON oi.product_id = p.product_id
+
+        JOIN categories cat
+            ON p.category_id = cat.category_id
+
+        WHERE 1=1
+    """
+
+    params=[]
+
+
+    if region!="All":
+        query+=" AND r.region_name=%s"
+        params.append(region)
+
+    if country!="All":
+        query+=" AND c.country_name=%s"
+        params.append(country)
+
+    if category!="All":
+        query+=" AND cat.category_name=%s"
+        params.append(category)
+
+    if product!="All":
+        query+=" AND p.product_name=%s"
+        params.append(product)
+
+    if year!="All":
+        query+=" AND EXTRACT(YEAR FROM o.order_date)=%s"
+        params.append(year)
+
+
+    query += """
+        GROUP BY cat.category_name
+        ORDER BY revenue DESC
+        LIMIT 1
+    """
+
+    result = execute_query(query, tuple(params))
+
+    if result:
+        return (result[0][0], float(result[0][1]))
+
+    return ("None", 0)
+
 def available_regions(country="All"):
 
     query = """

@@ -40,6 +40,7 @@ from analytics.sales_queries import (
     inventory_status,
     monthly_revenue,
     category_sales,
+    top_category_by_revenue,
     customer_segmentation,
     customer_churn_prediction,
     product_recommendations,
@@ -174,6 +175,14 @@ if page == "🏠 Dashboard":
 
     st.divider()
 
+    top_category_data = top_category_by_revenue(
+    selected_region,
+    selected_country,
+    selected_category,
+    selected_product,
+    selected_year
+)
+
     show_kpi_cards(
         total_revenue(
             selected_region,
@@ -203,7 +212,10 @@ if page == "🏠 Dashboard":
             selected_product,
             selected_year
         )
+        top_category_data[0],
+        top_category_data[1]
     )
+
     st.divider()
 
     st.subheader("📌 Executive Summary")
