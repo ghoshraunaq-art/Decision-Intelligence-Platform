@@ -613,7 +613,7 @@ if page == "🏠 Dashboard":
             recommendation_data,
             columns=[
                 "Product",
-                "Recommended Product",
+                "Frequently Purchased Together",
                 "Purchase Frequency"
             ]
         )
