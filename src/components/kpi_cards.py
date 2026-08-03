@@ -17,9 +17,7 @@ def show_kpi_cards(
     revenue,
     products,
     customers,
-    orders,
-    top_category,
-    top_category_revenue
+    orders
 ):
 
     col1, col2 = st.columns(2)
@@ -38,7 +36,7 @@ def show_kpi_cards(
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    col3, col4, col5 = st.columns(3)
+    col3, col4 = st.columns(2)
 
     with col3:
         st.metric(
@@ -50,11 +48,4 @@ def show_kpi_cards(
         st.metric(
             "📑 Total Orders",
             f"{orders:,}"
-        )
-
-    with col5:
-        st.metric(
-            "🏆 Top Revenue Category",
-            top_category,
-            format_currency(top_category_revenue)
         )

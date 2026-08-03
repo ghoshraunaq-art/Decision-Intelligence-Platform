@@ -211,9 +211,7 @@ if page == "🏠 Dashboard":
             selected_category,
             selected_product,
             selected_year
-        ),
-        top_category_data[0],
-        top_category_data[1]
+        )
     )
 
     st.divider()
