@@ -23,7 +23,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from analytics.sales_queries import (
+from analytics.sales_queries import(
     total_revenue,
     total_products_sold,
     total_customers,
