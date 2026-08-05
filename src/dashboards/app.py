@@ -17,6 +17,7 @@ from components.customer_intelligence import show_customer_intelligence
 from components.anomaly_detection import show_anomaly_detection
 from components.executive_insights import show_executive_insights
 from components.customer_churn import show_customer_churn
+from components.filters import create_filter_sidebar
 
 import streamlit as st
 import pandas as pd
@@ -91,70 +92,13 @@ page = st.sidebar.radio(
 
 if page == "🏠 Dashboard":
 
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("## 🎯 Filters")
-
-    # Country
-    country_options = ["All"] + [
-    row[0] for row in available_countries()
-    ]
-
-    selected_country = st.sidebar.selectbox(
-        "Country",
-        country_options
-    )
-
-    # Region
-    region_options = ["All"] + [
-    row[0]
-    for row in available_regions(selected_country)
-    ]
-
-    selected_region = st.sidebar.selectbox(
-        "Region",
-        region_options
-    )
-
-    # Category
-    category_options = ["All"] + [
-        row[0] for row in available_categories(
-            selected_region,
-            selected_country
-        )
-    ]
-
-    selected_category = st.sidebar.selectbox(
-        "Category",
-        category_options
-    )
-
-    # Product
-    product_options = ["All"] + [
-        row[0] for row in available_products(
-            selected_region,
-            selected_country,
-            selected_category
-        )
-    ]
-
-    selected_product = st.sidebar.selectbox(
-        "Product",
-        product_options
-    )
-
-    # Year
-    year_options = ["All"] + [
-    int(row[0]) for row in available_years(
-        selected_region,
-        selected_country,
-        selected_category,
-        selected_product
-    )
-    ]
-
-    selected_year = st.sidebar.selectbox(
-        "Year",
-        year_options
+    selected_region, selected_country, selected_category, selected_product, selected_year = create_filter_sidebar(
+    "dash",
+    available_regions,
+    available_countries,
+    available_categories,
+    available_products,
+    available_years,
     )
     
     st.title("📊 Decision Intelligence Platform")
@@ -636,69 +580,13 @@ if page == "🏠 Dashboard":
 
 elif page == "📈 Analytics":
 
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("## 🎯 Filters")
-
-    country_options = ["All"] + [
-        row[0] for row in available_countries()
-    ]
-
-    selected_country = st.sidebar.selectbox(
-        "Country",
-        country_options,
-        key="analytics_country"
-    )
-
-    region_options = ["All"] + [
-        row[0] for row in available_regions(selected_country)
-    ]
-
-    selected_region = st.sidebar.selectbox(
-        "Region",
-        region_options,
-        key="analytics_region"
-    )
-
-    category_options = ["All"] + [
-        row[0] for row in available_categories(
-            selected_region,
-            selected_country
-        )
-    ]
-
-    selected_category = st.sidebar.selectbox(
-        "Category",
-        category_options,
-        key="analytics_category"
-    )
-
-    product_options = ["All"] + [
-        row[0] for row in available_products(
-            selected_region,
-            selected_country,
-            selected_category
-        )
-    ]
-
-    selected_product = st.sidebar.selectbox(
-        "Product",
-        product_options,
-        key="analytics_product"
-    )
-
-    year_options = ["All"] + [
-        int(row[0]) for row in available_years(
-            selected_region,
-            selected_country,
-            selected_category,
-            selected_product
-        )
-    ]
-
-    selected_year = st.sidebar.selectbox(
-        "Year",
-        year_options,
-        key="analytics_year"
+    selected_region, selected_country, selected_category, selected_product, selected_year = create_filter_sidebar(
+    "an",
+    available_regions,
+    available_countries,
+    available_categories,
+    available_products,
+    available_years,
     )
 
     st.title("📈 Analytics")
@@ -918,29 +806,72 @@ elif page == "📈 Analytics":
 
 elif page == "💡 Recommendations":
 
+    selected_region, selected_country, selected_category, selected_product, selected_year = create_filter_sidebar(
+        "rec",
+        available_regions,
+        available_countries,
+        available_categories,
+        available_products,
+        available_years,
+    )
+
     st.title("💡 Business Recommendations")
 
     st.divider()
 
-    inventory = inventory_status()
+    inventory = inventory_status(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    )
 
     show_recommendations(
         inventory
     )
 
+    products_df = pd.DataFrame(
+        top_products(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        columns=["Product", "Units Sold"]
+    )
+
+    customers_df = pd.DataFrame(
+        top_customers(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        columns=["Customer", "Revenue"]
+    )
+
+    inventory_df = pd.DataFrame(
+        inventory,
+        columns=["Product", "Stock"]
+    )
+
+    show_executive_insights(
+        total_revenue(
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
+        ),
+        products_df,
+        inventory_df,
+        customers_df
+    )
+
     st.divider()
-
-    if total_revenue() > 5000000:
-        st.success("✅ Revenue is performing very well.")
-    else:
-        st.warning("⚠ Revenue can be improved.")
-
-    if total_orders() < 30:
-        st.warning(
-            "⚠ Order volume is relatively low. Consider promotional campaigns."
-        )
-    else:
-        st.success("✅ Order volume is healthy.")
 
     low_stock = [
         item[0]
@@ -949,14 +880,29 @@ elif page == "💡 Recommendations":
     ]
 
     if low_stock:
+
         st.error("Low Stock Products:")
 
         for product in low_stock:
             st.write(f"• {product}")
 
     else:
+
         st.success("✅ No products are running low on stock.")
 
+    st.divider()
+
+    st.subheader("📌 Recommended Actions")
+
+    st.markdown("""
+### Priority Actions
+
+- Increase inventory for low-stock products.
+- Promote slow-moving categories.
+- Reward high-value customers with loyalty offers.
+- Focus marketing on high-performing regions.
+- Monitor monthly revenue trends for anomalies.
+""")
 
 st.divider()
 

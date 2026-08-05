@@ -1,7 +1,11 @@
 from database.db_connection import get_connection
 from datetime import datetime
+import streamlit as st
 
-
+@st.cache_data(
+    ttl=600,
+    show_spinner=False
+)
 def execute_query(query, params=None):
 
     conn = get_connection()
