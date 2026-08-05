@@ -28,9 +28,9 @@ import plotly.graph_objects as go
 st.markdown(
     """
     <style>
-        [data-testid="stStatusWidget"] {
-            display: none;
-        }
+    #stDecoration {
+        display: none;
+    }
     </style>
     """,
     unsafe_allow_html=True
