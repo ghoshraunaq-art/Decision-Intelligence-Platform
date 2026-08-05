@@ -564,7 +564,7 @@ if page == "🏠 Dashboard":
 
         st.dataframe(
             recommendation_df,
-            width="stretch",
+            use_container_width=True,
             hide_index=True
         )
 
