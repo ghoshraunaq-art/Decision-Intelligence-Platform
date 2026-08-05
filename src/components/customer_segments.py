@@ -38,12 +38,12 @@ def show_customer_segments(data):
         return "Low Value"
 
     df["Segment"] = df["Revenue"].apply(segment)
-
+    
     st.dataframe(
         df,
-        width="stretch",
+        use_container_width=True,
         hide_index=True
-    )
+    )   
 
     segment_order = ["Low Value", "Regular", "VIP"]
 
