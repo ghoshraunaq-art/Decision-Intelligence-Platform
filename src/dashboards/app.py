@@ -305,18 +305,18 @@ if page == "🏠 Dashboard":
 
     inventory_df = pd.DataFrame(
         inventory_status(
-    selected_region,
-    selected_country,
-    selected_category,
-    selected_product,
-    selected_year
+            selected_region,
+            selected_country,
+            selected_category,
+            selected_product,
+            selected_year
         ),
-    columns=["Product", "Stock"]
+        columns=["Product", "Stock"]
     )
 
     st.dataframe(
         inventory_df,
-        width="stretch"
+        use_container_width=True
     )
 
     st.divider()
