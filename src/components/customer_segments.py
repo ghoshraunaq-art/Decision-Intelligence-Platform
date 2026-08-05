@@ -38,7 +38,7 @@ def show_customer_segments(data):
         return "Low Value"
 
     df["Segment"] = df["Revenue"].apply(segment)
-    
+
     st.dataframe(
         df,
         use_container_width=True,
@@ -81,5 +81,5 @@ def show_customer_segments(data):
 
     st.plotly_chart(
         fig,
-        width="stretch"
+        use_container_width=True
     )

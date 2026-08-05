@@ -258,8 +258,8 @@ if page == "🏠 Dashboard":
 
     with left:
         st.plotly_chart(
-            fig_products,
-            width="stretch"
+        fig_products,
+        use_container_width=True
         )
 
     customers_df = pd.DataFrame(
@@ -296,7 +296,7 @@ if page == "🏠 Dashboard":
     with right:
         st.plotly_chart(
             fig_customers,
-            width="stretch"
+            use_container_width=True
         )
 
     st.divider()
@@ -325,11 +325,11 @@ if page == "🏠 Dashboard":
 
     monthly_df = pd.DataFrame(
         monthly_revenue(
-    selected_region,
-    selected_country,
-    selected_category,
-    selected_product,
-    selected_year
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
         ),
         columns=["Month", "Revenue"]
     )
@@ -359,7 +359,7 @@ if page == "🏠 Dashboard":
     with left:
         st.plotly_chart(
             fig_month,
-            width="stretch"
+            use_container_width=True
         )
 
     category_sales_df = pd.DataFrame(
@@ -383,7 +383,7 @@ if page == "🏠 Dashboard":
     with right:
         st.plotly_chart(
             fig_sales,
-            width="stretch"
+            use_container_width=True
         )
 
     st.divider()
@@ -442,7 +442,7 @@ if page == "🏠 Dashboard":
         st.subheader("📈 Revenue Trend Forecast")
         st.plotly_chart(
             forecast_fig,
-            width="stretch"
+            use_container_width=True
         )
 
     st.divider()
@@ -664,7 +664,7 @@ elif page == "📈 Analytics":
 
     st.dataframe(
         products_df,
-        width="stretch",
+        use_container_width=True,
         hide_index=True
     )
 
@@ -695,7 +695,7 @@ elif page == "📈 Analytics":
 
     st.dataframe(
         customers_df,
-        width="stretch",
+        use_container_width=True,
         hide_index=True
     )
 
@@ -715,7 +715,7 @@ elif page == "📈 Analytics":
             subset=["Stock"],
             cmap="RdYlGn"
         ),
-    width="stretch"
+        use_container_width=True
     )
 
     st.download_button(
@@ -750,7 +750,7 @@ elif page == "📈 Analytics":
 
     st.plotly_chart(
         fig_month,
-        width="stretch"
+        use_container_width=True
     )
 
     st.divider()
@@ -777,7 +777,7 @@ elif page == "📈 Analytics":
 
     st.plotly_chart(
         fig_sales,
-        width="stretch"
+        use_container_width=True
     )
      
     st.divider()
@@ -797,7 +797,7 @@ elif page == "📈 Analytics":
     if forecast_fig:
         st.plotly_chart(
             forecast_fig,
-            width="stretch"
+            use_container_width=True
         )
 
 # ===========================
