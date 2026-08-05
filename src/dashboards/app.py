@@ -24,6 +24,18 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
+
+st.markdown(
+    """
+    <style>
+        [data-testid="stStatusWidget"] {
+            display: none;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 from analytics.sales_queries import(
     total_revenue,
     total_products_sold,
@@ -662,11 +674,15 @@ elif page == "📈 Analytics":
             ascending=False
         )
 
-    st.dataframe(
-        products_df,
-        use_container_width=True,
-        hide_index=True
-    )
+    st.write("Type:", type(products_df))
+    st.write("Shape:", products_df.shape)
+    st.write("Columns:", products_df.columns.tolist())
+    st.write("Dtypes:")
+    st.write(products_df.dtypes)
+    st.write("First 5 rows:")
+    st.write(products_df.head())
+
+    st.write(products_df)
 
     st.download_button(
         "⬇ Download Top Products CSV",
