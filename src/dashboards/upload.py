@@ -31,9 +31,5 @@ def upload_page():
         st.dataframe(df.head())
 
 
-        st.write("Rows:", len(df))
-        st.write("Columns:", list(df.columns))
-
-
 if __name__ == "__main__":
     upload_page()

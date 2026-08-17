@@ -674,16 +674,6 @@ elif page == "📈 Analytics":
             ascending=False
         )
 
-    st.write("Type:", type(products_df))
-    st.write("Shape:", products_df.shape)
-    st.write("Columns:", products_df.columns.tolist())
-    st.write("Dtypes:")
-    st.write(products_df.dtypes)
-    st.write("First 5 rows:")
-    st.write(products_df.head())
-
-    st.write(products_df)
-
     st.download_button(
         "⬇ Download Top Products CSV",
         products_df.to_csv(index=False),
