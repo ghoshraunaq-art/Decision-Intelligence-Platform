@@ -44,6 +44,16 @@ def create_filter_sidebar(
             ]
 
     # ======================================================
+    # RESET DEPENDENT FILTERS
+    # ======================================================
+
+    def reset_dependent_filters():
+        st.session_state[f"{prefix}_region_live"] = "All"
+        st.session_state[f"{prefix}_category_live"] = "All"
+        st.session_state[f"{prefix}_product_live"] = "All"
+        st.session_state[f"{prefix}_year_live"] = "All"
+
+    # ======================================================
     # COUNTRY
     # ======================================================
 
@@ -54,19 +64,12 @@ def create_filter_sidebar(
         for row in available_countries()
     ]
 
-    old_country = st.session_state[country_live_key]
-
     country = st.sidebar.selectbox(
         "Country",
         options=country_options,
         key=country_live_key,
+        on_change=reset_dependent_filters,
     )
-
-    if country != old_country:
-        st.session_state[f"{prefix}_region_live"] = "All"
-        st.session_state[f"{prefix}_category_live"] = "All"
-        st.session_state[f"{prefix}_product_live"] = "All"
-        st.session_state[f"{prefix}_year_live"] = "All"
 
     # ======================================================
     # REGION
@@ -74,14 +77,26 @@ def create_filter_sidebar(
 
     region_live_key = f"{prefix}_region_live"
 
-    # Region is independent and can be selected even when
-    # Country is set to All.
+    # When Country = All:
+    #     Show all regions.
+    #
+    # When a specific Country is selected:
+    #     Show only regions belonging to that country.
 
-    region_options = ["All"] + [
-        row[0]
-        for row in available_regions()
-    ]
+    if country == "All":
+        region_options = ["All"] + [
+            row[0]
+            for row in available_regions()
+        ]
+    else:
+        region_options = ["All"] + [
+            row[0]
+            for row in available_regions(
+                country=country
+            )
+        ]
 
+    # Prevent invalid/stale region selections.
     if st.session_state[region_live_key] not in region_options:
         st.session_state[region_live_key] = "All"
 
@@ -97,11 +112,12 @@ def create_filter_sidebar(
 
     category_live_key = f"{prefix}_category_live"
 
-    # Category is enabled if either Country or Region
-    # has been selected.
+    # Category becomes available when either:
+    # Country OR Region is selected.
 
     geography_selected = (
-        country != "All" or region != "All"
+        country != "All"
+        or region != "All"
     )
 
     category_options = ["All"]
@@ -115,6 +131,7 @@ def create_filter_sidebar(
             )
         ]
 
+    # Prevent invalid/stale category selections.
     if st.session_state[category_live_key] not in category_options:
         st.session_state[category_live_key] = "All"
 
@@ -133,6 +150,9 @@ def create_filter_sidebar(
 
     product_options = ["All"]
 
+    # Product becomes available only after Category
+    # has been selected.
+
     if category != "All":
         product_options += [
             row[0]
@@ -143,6 +163,7 @@ def create_filter_sidebar(
             )
         ]
 
+    # Prevent invalid/stale product selections.
     if st.session_state[product_live_key] not in product_options:
         st.session_state[product_live_key] = "All"
 
@@ -161,6 +182,9 @@ def create_filter_sidebar(
 
     year_options = ["All"]
 
+    # Year becomes available only after Product
+    # has been selected.
+
     if product != "All":
         year_options += [
             int(row[0])
@@ -172,6 +196,7 @@ def create_filter_sidebar(
             )
         ]
 
+    # Prevent invalid/stale year selections.
     if st.session_state[year_live_key] not in year_options:
         st.session_state[year_live_key] = "All"
 
