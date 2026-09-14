@@ -14,7 +14,7 @@ def create_filter_sidebar(
     st.sidebar.markdown("## 🎯 Filters")
 
     # ======================================================
-    # DEFAULT FILTER VALUES
+    # DEFAULT VALUES
     # ======================================================
 
     defaults = {
@@ -32,7 +32,7 @@ def create_filter_sidebar(
             st.session_state[applied_key] = value
 
     # ======================================================
-    # LIVE FILTER VALUES
+    # LIVE VALUES
     # ======================================================
 
     for key, value in defaults.items():
@@ -62,7 +62,6 @@ def create_filter_sidebar(
         key=country_live_key,
     )
 
-    # Reset all dependent filters when country changes
     if country != old_country:
         st.session_state[f"{prefix}_region_live"] = "All"
         st.session_state[f"{prefix}_category_live"] = "All"
@@ -75,13 +74,13 @@ def create_filter_sidebar(
 
     region_live_key = f"{prefix}_region_live"
 
-    region_options = ["All"]
+    # Region is independent and can be selected even when
+    # Country is set to All.
 
-    if country != "All":
-        region_options += [
-            row[0]
-            for row in available_regions(country)
-        ]
+    region_options = ["All"] + [
+        row[0]
+        for row in available_regions()
+    ]
 
     if st.session_state[region_live_key] not in region_options:
         st.session_state[region_live_key] = "All"
@@ -90,7 +89,6 @@ def create_filter_sidebar(
         "Region",
         options=region_options,
         key=region_live_key,
-        disabled=(country == "All"),
     )
 
     # ======================================================
@@ -99,14 +97,16 @@ def create_filter_sidebar(
 
     category_live_key = f"{prefix}_category_live"
 
+    # Category is enabled if either Country or Region
+    # has been selected.
+
+    geography_selected = (
+        country != "All" or region != "All"
+    )
+
     category_options = ["All"]
 
-    # Category depends on Country, not Region.
-    # Therefore, Category remains active when:
-    # Country = Australia
-    # Region = All
-
-    if country != "All":
+    if geography_selected:
         category_options += [
             row[0]
             for row in available_categories(
@@ -122,7 +122,7 @@ def create_filter_sidebar(
         "Category",
         options=category_options,
         key=category_live_key,
-        disabled=(country == "All"),
+        disabled=not geography_selected,
     )
 
     # ======================================================
@@ -133,10 +133,7 @@ def create_filter_sidebar(
 
     product_options = ["All"]
 
-    # Product depends on Category.
-    # Region may remain All.
-
-    if country != "All" and category != "All":
+    if category != "All":
         product_options += [
             row[0]
             for row in available_products(
@@ -164,7 +161,7 @@ def create_filter_sidebar(
 
     year_options = ["All"]
 
-    if country != "All" and product != "All":
+    if product != "All":
         year_options += [
             int(row[0])
             for row in available_years(
