@@ -104,14 +104,15 @@ page = st.sidebar.radio(
 
 if page == "🏠 Dashboard":
 
-    selected_region, selected_country, selected_category, selected_product, selected_year = create_filter_sidebar(
-    "dash",
-    available_regions,
-    available_countries,
-    available_categories,
-    available_products,
-    available_years,
-    )
+    with st.sidebar:
+        selected_region, selected_country, selected_category, selected_product, selected_year = create_filter_sidebar(
+            "dash",
+            available_regions,
+            available_countries,
+            available_categories,
+            available_products,
+            available_years,
+        )
     
     st.title("📊 Decision Intelligence Platform")
 
@@ -592,14 +593,15 @@ if page == "🏠 Dashboard":
 
 elif page == "📈 Analytics":
 
-    selected_region, selected_country, selected_category, selected_product, selected_year = create_filter_sidebar(
-    "an",
-    available_regions,
-    available_countries,
-    available_categories,
-    available_products,
-    available_years,
-    )
+    with st.sidebar:
+        selected_region, selected_country, selected_category, selected_product, selected_year = create_filter_sidebar(
+            "an",
+            available_regions,
+            available_countries,
+            available_categories,
+            available_products,
+            available_years,
+        )
 
     st.title("📈 Analytics")
 
@@ -812,14 +814,15 @@ elif page == "📈 Analytics":
 
 elif page == "💡 Recommendations":
 
-    selected_region, selected_country, selected_category, selected_product, selected_year = create_filter_sidebar(
-        "rec",
-        available_regions,
-        available_countries,
-        available_categories,
-        available_products,
-        available_years,
-    )
+    with st.sidebar:
+        selected_region, selected_country, selected_category, selected_product, selected_year = create_filter_sidebar(
+            "rec",
+            available_regions,
+            available_countries,
+            available_categories,
+            available_products,
+            available_years,
+        )
 
     st.title("💡 Business Recommendations")
 

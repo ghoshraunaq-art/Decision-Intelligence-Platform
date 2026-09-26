@@ -86,25 +86,11 @@ def create_filter_sidebar(
     product_key = f"{prefix}_product"
     year_key = f"{prefix}_year"
 
-    applied_country_key = (
-        f"{prefix}_applied_country"
-    )
-
-    applied_region_key = (
-        f"{prefix}_applied_region"
-    )
-
-    applied_category_key = (
-        f"{prefix}_applied_category"
-    )
-
-    applied_product_key = (
-        f"{prefix}_applied_product"
-    )
-
-    applied_year_key = (
-        f"{prefix}_applied_year"
-    )
+    applied_country_key = f"{prefix}_applied_country"
+    applied_region_key = f"{prefix}_applied_region"
+    applied_category_key = f"{prefix}_applied_category"
+    applied_product_key = f"{prefix}_applied_product"
+    applied_year_key = f"{prefix}_applied_year"
 
 
     # ========================================================
@@ -132,29 +118,19 @@ def create_filter_sidebar(
     # ========================================================
 
     if applied_country_key not in st.session_state:
-        st.session_state[
-            applied_country_key
-        ] = "All"
+        st.session_state[applied_country_key] = "All"
 
     if applied_region_key not in st.session_state:
-        st.session_state[
-            applied_region_key
-        ] = "All"
+        st.session_state[applied_region_key] = "All"
 
     if applied_category_key not in st.session_state:
-        st.session_state[
-            applied_category_key
-        ] = "All"
+        st.session_state[applied_category_key] = "All"
 
     if applied_product_key not in st.session_state:
-        st.session_state[
-            applied_product_key
-        ] = "All"
+        st.session_state[applied_product_key] = "All"
 
     if applied_year_key not in st.session_state:
-        st.session_state[
-            applied_year_key
-        ] = "All"
+        st.session_state[applied_year_key] = "All"
 
 
     # ========================================================
@@ -184,9 +160,6 @@ def create_filter_sidebar(
 
     # ========================================================
     # ONE DATABASE REQUEST
-    #
-    # This replaces the previous chain of separate database
-    # requests.
     # ========================================================
 
     options = available_filter_options(
@@ -195,7 +168,6 @@ def create_filter_sidebar(
         category=category,
         product=product,
     )
-
 
     country_options = options["country"]
     region_options = options["region"]
@@ -206,63 +178,47 @@ def create_filter_sidebar(
 
     # ========================================================
     # VALIDATE CURRENT VALUES
-    #
-    # Only reset something if it is genuinely invalid.
     # ========================================================
 
     if country not in country_options:
 
         country = "All"
 
-        st.session_state[
-            country_key
-        ] = "All"
+        st.session_state[country_key] = "All"
 
 
     if region not in region_options:
 
         region = "All"
 
-        st.session_state[
-            region_key
-        ] = "All"
+        st.session_state[region_key] = "All"
 
 
     if category not in category_options:
 
         category = "All"
 
-        st.session_state[
-            category_key
-        ] = "All"
+        st.session_state[category_key] = "All"
 
 
     if product not in product_options:
 
         product = "All"
 
-        st.session_state[
-            product_key
-        ] = "All"
+        st.session_state[product_key] = "All"
 
 
     if year not in year_options:
 
         year = "All"
 
-        st.session_state[
-            year_key
-        ] = "All"
+        st.session_state[year_key] = "All"
 
 
     # ========================================================
     # HIERARCHY
     #
-    # IMPORTANT:
-    #
     # All counts as a valid selection.
-    # Therefore every downstream filter remains enabled once
-    # its parent has a valid value.
     # ========================================================
 
     country_selected = (
@@ -286,7 +242,7 @@ def create_filter_sidebar(
     # SIDEBAR
     # ========================================================
 
-    st.sidebar.markdown(
+    st.markdown(
         "## 🎯 Filters"
     )
 
@@ -295,7 +251,7 @@ def create_filter_sidebar(
     # COUNTRY
     # ========================================================
 
-    st.sidebar.selectbox(
+    st.selectbox(
         "Country",
         country_options,
         key=country_key,
@@ -306,7 +262,7 @@ def create_filter_sidebar(
     # REGION
     # ========================================================
 
-    st.sidebar.selectbox(
+    st.selectbox(
         "Region",
         region_options,
         key=region_key,
@@ -318,7 +274,7 @@ def create_filter_sidebar(
     # CATEGORY
     # ========================================================
 
-    st.sidebar.selectbox(
+    st.selectbox(
         "Category",
         category_options,
         key=category_key,
@@ -333,7 +289,7 @@ def create_filter_sidebar(
     # PRODUCT
     # ========================================================
 
-    st.sidebar.selectbox(
+    st.selectbox(
         "Product",
         product_options,
         key=product_key,
@@ -349,7 +305,7 @@ def create_filter_sidebar(
     # YEAR
     # ========================================================
 
-    st.sidebar.selectbox(
+    st.selectbox(
         "Year",
         year_options,
         key=year_key,
@@ -374,7 +330,7 @@ def create_filter_sidebar(
     )
 
 
-    apply_clicked = st.sidebar.button(
+    apply_clicked = st.button(
         "✅ Apply Filters",
         key=f"{prefix}_apply_filters",
         type="primary",
@@ -389,33 +345,23 @@ def create_filter_sidebar(
 
     if apply_clicked:
 
-        st.session_state[
-            applied_country_key
-        ] = normalize_value(
+        st.session_state[applied_country_key] = normalize_value(
             st.session_state[country_key]
         )
 
-        st.session_state[
-            applied_region_key
-        ] = normalize_value(
+        st.session_state[applied_region_key] = normalize_value(
             st.session_state[region_key]
         )
 
-        st.session_state[
-            applied_category_key
-        ] = normalize_value(
+        st.session_state[applied_category_key] = normalize_value(
             st.session_state[category_key]
         )
 
-        st.session_state[
-            applied_product_key
-        ] = normalize_value(
+        st.session_state[applied_product_key] = normalize_value(
             st.session_state[product_key]
         )
 
-        st.session_state[
-            applied_year_key
-        ] = normalize_value(
+        st.session_state[applied_year_key] = normalize_value(
             st.session_state[year_key]
         )
 
@@ -427,23 +373,9 @@ def create_filter_sidebar(
     # ========================================================
 
     return (
-        st.session_state[
-            applied_region_key
-        ],
-
-        st.session_state[
-            applied_country_key
-        ],
-
-        st.session_state[
-            applied_category_key
-        ],
-
-        st.session_state[
-            applied_product_key
-        ],
-
-        st.session_state[
-            applied_year_key
-        ],
+        st.session_state[applied_region_key],
+        st.session_state[applied_country_key],
+        st.session_state[applied_category_key],
+        st.session_state[applied_product_key],
+        st.session_state[applied_year_key],
     )
