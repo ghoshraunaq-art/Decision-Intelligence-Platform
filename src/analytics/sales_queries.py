@@ -1043,6 +1043,236 @@ def available_years(
 
     return execute_query(query, tuple(params))
 
+@st.cache_data(
+    ttl=600,
+    show_spinner=False
+)
+def available_filter_options(
+    country="All",
+    region="All",
+    category="All",
+    product="All",
+):
+    """
+    Load all filter options for the current hierarchy
+    in a single database round-trip.
+
+    Returns:
+        {
+            "country": [...],
+            "region": [...],
+            "category": [...],
+            "product": [...],
+            "year": [...]
+        }
+    """
+
+    query = """
+        WITH params AS (
+            SELECT
+                %s::text AS selected_country,
+                %s::text AS selected_region,
+                %s::text AS selected_category,
+                %s::text AS selected_product
+        ),
+
+        base AS MATERIALIZED (
+            SELECT
+                c.country_name AS country_name,
+                r.region_name AS region_name,
+                cat.category_name AS category_name,
+                p.product_name AS product_name,
+                EXTRACT(
+                    YEAR FROM o.order_date
+                )::INTEGER AS order_year
+
+            FROM order_items oi
+
+            JOIN orders o
+                ON oi.order_id = o.order_id
+
+            JOIN customers cu
+                ON o.customer_id = cu.customer_id
+
+            JOIN regions r
+                ON cu.region_id = r.region_id
+
+            JOIN countries c
+                ON r.country_id = c.country_id
+
+            JOIN products p
+                ON oi.product_id = p.product_id
+
+            JOIN categories cat
+                ON p.category_id = cat.category_id
+
+            CROSS JOIN params
+
+            WHERE
+                params.selected_country = 'All'
+                OR c.country_name = params.selected_country
+        ),
+
+        options AS (
+
+            -- COUNTRY
+            SELECT DISTINCT
+                'country' AS filter_type,
+                c.country_name::text AS filter_value
+            FROM countries c
+
+
+            UNION ALL
+
+
+            -- REGION
+            SELECT DISTINCT
+                'region' AS filter_type,
+                r.region_name::text AS filter_value
+
+            FROM regions r
+
+            JOIN countries c
+                ON r.country_id = c.country_id
+
+            CROSS JOIN params
+
+            WHERE
+                params.selected_country = 'All'
+                OR c.country_name = params.selected_country
+
+
+            UNION ALL
+
+
+            -- CATEGORY
+            SELECT DISTINCT
+                'category' AS filter_type,
+                b.category_name::text AS filter_value
+
+            FROM base b
+
+            CROSS JOIN params
+
+            WHERE
+                params.selected_region = 'All'
+                OR b.region_name = params.selected_region
+
+
+            UNION ALL
+
+
+            -- PRODUCT
+            SELECT DISTINCT
+                'product' AS filter_type,
+                b.product_name::text AS filter_value
+
+            FROM base b
+
+            CROSS JOIN params
+
+            WHERE
+                (
+                    params.selected_region = 'All'
+                    OR b.region_name = params.selected_region
+                )
+
+                AND
+
+                (
+                    params.selected_category = 'All'
+                    OR b.category_name = params.selected_category
+                )
+
+
+            UNION ALL
+
+
+            -- YEAR
+            SELECT DISTINCT
+                'year' AS filter_type,
+                b.order_year::text AS filter_value
+
+            FROM base b
+
+            CROSS JOIN params
+
+            WHERE
+                (
+                    params.selected_region = 'All'
+                    OR b.region_name = params.selected_region
+                )
+
+                AND
+
+                (
+                    params.selected_category = 'All'
+                    OR b.category_name = params.selected_category
+                )
+
+                AND
+
+                (
+                    params.selected_product = 'All'
+                    OR b.product_name = params.selected_product
+                )
+        )
+
+        SELECT
+            filter_type,
+            filter_value
+
+        FROM options
+    """
+
+    rows = execute_query(
+        query,
+        (
+            country,
+            region,
+            category,
+            product,
+        )
+    )
+
+    result = {
+        "country": ["All"],
+        "region": ["All"],
+        "category": ["All"],
+        "product": ["All"],
+        "year": ["All"],
+    }
+
+    for filter_type, filter_value in rows:
+
+        if filter_value is None:
+            continue
+
+        filter_value = str(
+            filter_value
+        ).strip()
+
+        if not filter_value:
+            continue
+
+        if filter_value != "All":
+            result[filter_type].append(
+                filter_value
+            )
+
+    # Remove duplicates and sort.
+    for filter_name in result:
+
+        result[filter_name] = [
+            "All"
+        ] + sorted(
+            set(
+                result[filter_name][1:]
+            )
+        )
+
+    return result
+
 def customer_segmentation(
     region="All",
     country="All",
@@ -1142,10 +1372,10 @@ def customer_churn_prediction(
 
         days_since = (today.date() - last_purchase).days
 
-        if days_since > 90 and frequency <= 2:
+        if days_since > 180 and frequency <= 2:
             risk = "🔴 High"
 
-        elif days_since > 45:
+        elif days_since > 90:
             risk = "🟡 Medium"
 
         else:

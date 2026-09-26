@@ -24,6 +24,12 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
+st.set_page_config(
+    page_title="Decision Intelligence Platform",
+    page_icon="📊",
+    layout="wide"
+)
+
 
 st.markdown(
     """
@@ -57,12 +63,6 @@ from analytics.sales_queries import(
     customer_segmentation,
     customer_churn_prediction,
     product_recommendations,
-)
-
-st.set_page_config(
-    page_title="Decision Intelligence Platform",
-    page_icon="📊",
-    layout="wide"
 )
 
 st.markdown("""
