@@ -549,11 +549,16 @@ if page == "🏠 Dashboard":
 
     st.divider()
 
-    st.header("🛒 Product Recommendation Engine")
+        # ============================================================
+    # PRODUCT AFFINITY & RECOMMENDATIONS
+    # ============================================================
+
+    st.header("🛍️ Product Affinity & Recommendations")
 
     st.caption(
         "Identifies products frequently purchased together "
-        "using historical customer transaction patterns."
+        "to uncover cross-selling opportunities from historical "
+        "customer transaction patterns."
     )
 
     recommendation_data = product_recommendations(
@@ -575,6 +580,57 @@ if page == "🏠 Dashboard":
             ]
         )
 
+        # --------------------------------------------------------
+        # TOP PRODUCT ASSOCIATIONS
+        # --------------------------------------------------------
+
+        st.subheader("📊 Top Product Associations")
+
+        chart_df = recommendation_df.copy()
+
+        chart_df["Association"] = (
+            chart_df["Product"]
+            + " → "
+            + chart_df["Frequently Purchased Together"]
+        )
+
+        chart_df = chart_df.sort_values(
+            "Purchase Frequency",
+            ascending=True
+        )
+
+        fig_recommendations = px.bar(
+            chart_df,
+            x="Purchase Frequency",
+            y="Association",
+            orientation="h",
+            text="Purchase Frequency",
+            title="Frequently Purchased Product Pairs"
+        )
+
+        fig_recommendations.update_layout(
+            template="plotly_dark",
+            height=500,
+            xaxis_title="Purchase Frequency",
+            yaxis_title="",
+            showlegend=False
+        )
+
+        fig_recommendations.update_traces(
+            textposition="outside"
+        )
+
+        st.plotly_chart(
+            fig_recommendations,
+            use_container_width=True
+        )
+
+        # --------------------------------------------------------
+        # DETAILED RECOMMENDATIONS
+        # --------------------------------------------------------
+
+        st.subheader("📋 Detailed Recommendations")
+
         st.dataframe(
             recommendation_df,
             use_container_width=True,
@@ -584,9 +640,8 @@ if page == "🏠 Dashboard":
     else:
 
         st.info(
-            "No product recommendations available."
+            "No product recommendations available for the selected filters."
         )
-
 # ===========================
 # ANALYTICS
 # ===========================
@@ -645,30 +700,26 @@ elif page == "📈 Analytics":
     
     st.subheader("🏆 Top Selling Products")
 
-    search_product = st.text_input(
-        "🔍 Search Product",
-        key="search_product"
-    )
+    # --------------------------------------------------------
+    # PRODUCT CONTROLS
+    # --------------------------------------------------------
 
-    if search_product:
-        products_df = products_df[
-            products_df["Product"].str.contains(
-                search_product,
-                case=False
-            )
-        ]
+    sort_col, download_col = st.columns([2, 1])
 
-    sort_order = st.selectbox(
-        "Sort Products",
-        [
-            "Highest Sales",
-            "Lowest Sales"
-        ]
-    )
+    with sort_col:
+        sort_order = st.selectbox(
+            "Sort by",
+            [
+                "Highest Sales",
+                "Lowest Sales"
+            ],
+            key="analytics_product_sort"
+        )
 
     if sort_order == "Lowest Sales":
         products_df = products_df.sort_values(
-            "Units Sold"
+            "Units Sold",
+            ascending=True
         )
     else:
         products_df = products_df.sort_values(
@@ -676,42 +727,85 @@ elif page == "📈 Analytics":
             ascending=False
         )
 
-    st.download_button(
-        "⬇ Download Top Products CSV",
-        products_df.to_csv(index=False),
-        "top_products.csv",
-        "text/csv"
+    with download_col:
+        st.write("")
+        st.download_button(
+            "⬇ Download CSV",
+            products_df.to_csv(index=False),
+            "top_products.csv",
+            "text/csv",
+            use_container_width=True
+        )
+
+    # --------------------------------------------------------
+    # PRODUCT TABLE
+    # --------------------------------------------------------
+
+    st.dataframe(
+        products_df,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            "Product": st.column_config.TextColumn(
+                "Product"
+            ),
+            "Units Sold": st.column_config.NumberColumn(
+                "Units Sold",
+                format="%,.0f"
+            )
+        }
     )
 
     st.divider()
 
     st.subheader("👑 Top Customers")
 
-    search_customer = st.text_input(
-        "🔍 Search Customer",
-        key="search_customer"
-    )
+    customer_sort_col, customer_download_col = st.columns([2, 1])
 
-    if search_customer:
-        customers_df = customers_df[
-            customers_df["Customer"].str.contains(
-                search_customer,
-                case=False,
-                na=False
-            )
-        ]
+    with customer_sort_col:
+        customer_sort_order = st.selectbox(
+            "Sort by",
+            [
+                "Highest Revenue",
+                "Lowest Revenue"
+            ],
+            key="analytics_customer_sort"
+        )
+
+    if customer_sort_order == "Lowest Revenue":
+        customers_df = customers_df.sort_values(
+            "Revenue",
+            ascending=True
+        )
+    else:
+        customers_df = customers_df.sort_values(
+            "Revenue",
+            ascending=False
+        )
+
+    with customer_download_col:
+        st.write("")
+        st.download_button(
+            "⬇ Download CSV",
+            customers_df.to_csv(index=False),
+            "top_customers.csv",
+            "text/csv",
+            use_container_width=True
+        )
 
     st.dataframe(
         customers_df,
         use_container_width=True,
-        hide_index=True
-    )
-
-    st.download_button(
-        "⬇ Download Top Customers CSV",
-        customers_df.to_csv(index=False),
-        "top_customers.csv",
-        "text/csv"
+        hide_index=True,
+        column_config={
+            "Customer": st.column_config.TextColumn(
+                "Customer"
+            ),
+            "Revenue": st.column_config.NumberColumn(
+                "Revenue",
+                format="%,.2f"
+            )
+        }
     )
 
     st.divider()
@@ -901,17 +995,178 @@ elif page == "💡 Recommendations":
 
     st.divider()
 
+        # ============================================================
+    # DYNAMIC RECOMMENDED ACTIONS
+    # ============================================================
+
     st.subheader("📌 Recommended Actions")
 
-    st.markdown("""
-### Priority Actions
+    recommendation_actions = []
 
-- Increase inventory for low-stock products.
-- Promote slow-moving categories.
-- Reward high-value customers with loyalty offers.
-- Focus marketing on high-performing regions.
-- Monitor monthly revenue trends for anomalies.
-""")
+    # ------------------------------------------------------------
+    # 1. LOW STOCK
+    # ------------------------------------------------------------
+
+    low_stock = [
+        (product, stock)
+        for product, stock in inventory
+        if stock < 50
+    ]
+
+    if low_stock:
+
+        low_stock_product, low_stock_value = min(
+            low_stock,
+            key=lambda x: x[1]
+        )
+
+        recommendation_actions.append(
+            f"📦 Increase inventory for **{low_stock_product}**, "
+            f"which currently has only **{low_stock_value} units** in stock."
+        )
+
+    else:
+
+        recommendation_actions.append(
+            "✅ Inventory levels are currently healthy for the selected filters."
+        )
+
+    # ------------------------------------------------------------
+    # 2. SLOW-MOVING PRODUCT
+    # ------------------------------------------------------------
+
+    if not products_df.empty:
+
+        slow_product = products_df.sort_values(
+            "Units Sold",
+            ascending=True
+        ).iloc[0]
+
+        recommendation_actions.append(
+            f"🐢 Review sales strategy for **{slow_product['Product']}**, "
+            f"which has the lowest sales volume among the top products "
+            f"with **{slow_product['Units Sold']} units sold**."
+        )
+
+    # ------------------------------------------------------------
+    # 3. HIGH-VALUE CUSTOMER
+    # ------------------------------------------------------------
+
+    if not customers_df.empty:
+
+        top_customer = customers_df.sort_values(
+            "Revenue",
+            ascending=False
+        ).iloc[0]
+
+        recommendation_actions.append(
+            f"👑 Consider loyalty offers for **{top_customer['Customer']}**, "
+            f"the highest-value customer in the selected dataset "
+            f"with revenue of **₹{top_customer['Revenue']:,.2f}**."
+        )
+
+    # ------------------------------------------------------------
+    # 4. HIGH-PERFORMING REGION
+    # ------------------------------------------------------------
+
+    region_data = revenue_by_region(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    )
+
+    if region_data:
+
+        region_df = pd.DataFrame(
+            region_data,
+            columns=["Region", "Revenue"]
+        )
+
+        if not region_df.empty:
+
+            top_region = region_df.sort_values(
+                "Revenue",
+                ascending=False
+            ).iloc[0]
+
+            recommendation_actions.append(
+                f"📍 Focus marketing attention on **{top_region['Region']}**, "
+                f"which generated the highest revenue of "
+                f"**₹{top_region['Revenue']:,.2f}** for the selected filters."
+            )
+
+    # ------------------------------------------------------------
+    # 5. MONTHLY REVENUE TREND
+    # ------------------------------------------------------------
+
+    monthly_data = monthly_revenue(
+        selected_region,
+        selected_country,
+        selected_category,
+        selected_product,
+        selected_year
+    )
+
+    if monthly_data:
+
+        monthly_df = pd.DataFrame(
+            monthly_data,
+            columns=["Month", "Revenue"]
+        )
+
+        if len(monthly_df) >= 2:
+
+            latest_revenue = monthly_df.iloc[-1]["Revenue"]
+            previous_revenue = monthly_df.iloc[-2]["Revenue"]
+
+            if previous_revenue != 0:
+
+                revenue_change = (
+                    (latest_revenue - previous_revenue)
+                    / previous_revenue
+                ) * 100
+
+                if revenue_change < -10:
+
+                    recommendation_actions.append(
+                        f"⚠️ Investigate the recent revenue decline: "
+                        f"revenue decreased by **{abs(revenue_change):.1f}%** "
+                        f"from the previous month."
+                    )
+
+                elif revenue_change > 10:
+
+                    recommendation_actions.append(
+                        f"📈 Monitor the recent growth trend: "
+                        f"revenue increased by **{revenue_change:.1f}%** "
+                        f"from the previous month."
+                    )
+
+                else:
+
+                    recommendation_actions.append(
+                        f"📊 Revenue is relatively stable, changing by "
+                        f"**{revenue_change:+.1f}%** compared with the previous month."
+                    )
+
+    # ------------------------------------------------------------
+    # DISPLAY
+    # ------------------------------------------------------------
+
+    if recommendation_actions:
+
+        st.markdown("### Priority Actions")
+
+        for action in recommendation_actions:
+            st.markdown(f"- {action}")
+
+    else:
+
+        st.info(
+            "No specific recommendations are available for the selected filters."
+        )
 
 st.divider()
 
